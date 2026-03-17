@@ -1,0 +1,96 @@
+.proj-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  gap: 2rem;
+}
+
+.proj-card {
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  border-radius: 16px;
+  background: rgba(15, 12, 25, 0.5); /* Slightly darker baseline so text is clear */
+  transition: all 0.3s ease;
+}
+
+.proj-card:hover {
+  transform: translateY(-4px);
+  border-color: rgba(168, 85, 247, 0.4);
+  box-shadow: 0 15px 30px rgba(0,0,0,0.8), inset 0 1px 0 rgba(255,255,255,0.05);
+}
+
+.proj-git-icon {
+  color: #9ca3af;
+  transition: color 0.2s ease;
+  margin-top: 2px;
+}
+.proj-git-icon:hover {
+  color: #fff;
+}
+
+.proj-content {
+  padding: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  flex-grow: 1;
+}
+
+.proj-title {
+  font-size: 1.2rem;
+  font-weight: 700;
+  color: #fff;
+  margin-bottom: 0.25rem;
+}
+
+.proj-subtitle {
+  font-size: 0.8rem;
+  color: var(--color-accent);
+  margin-bottom: 1.25rem;
+  letter-spacing: -0.2px;
+}
+
+.glow-text-pink {
+  color: #ec4899;
+  text-shadow: 0 0 10px rgba(236, 72, 153, 0.5);
+}
+
+.proj-desc {
+  font-size: 0.8rem;
+  line-height: 1.6;
+  margin-bottom: 1.5rem;
+  flex-grow: 1;
+}
+
+.proj-arch-section {
+  margin-bottom: 1.5rem;
+}
+
+.arch-heading {
+  font-size: 0.7rem;
+  letter-spacing: 1px;
+  margin-bottom: 0.8rem;
+}
+
+.arch-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.proj-link {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  color: var(--color-primary);
+  font-size: 0.85rem;
+  margin-top: auto;
+}
+
+.proj-link:hover {
+  text-shadow: 0 0 10px var(--color-primary-dim);
+  color: #d8b4fe;
+}
+
+@media (max-width: 768px) {
+  .proj-grid { grid-template-columns: 1fr; }
+}

@@ -1,0 +1,132 @@
+@import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;700&display=swap');
+
+:root {
+  --bg-deep: #07070a;
+  --bg-card: rgba(13, 14, 21, 0.85); /* Slightly blueish dark for cards */
+  
+  --color-primary: #a855f7; /* Purple */
+  --color-primary-dim: rgba(168, 85, 247, 0.15);
+  --color-accent: #ec4899; /* Pinkish glow elements */
+  
+  --text-main: #d1d5db;
+  --text-muted: #9ca3af;
+  --text-bright: #ffffff;
+  
+  --font-heading: 'Space Grotesk', sans-serif;
+  --font-mono: 'JetBrains Mono', monospace;
+  --font-body: 'Inter', sans-serif;
+
+  --border-subtle: 1px solid rgba(168, 85, 247, 0.2);
+  
+  --transition-smooth: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html, body {
+  width: 100%;
+  height: 100%;
+  background-color: var(--bg-deep);
+  background: radial-gradient(circle at 50% -20%, rgba(168, 85, 247, 0.15) 0%, var(--bg-deep) 60%);
+  color: var(--text-main);
+  font-family: var(--font-body);
+  overflow-x: hidden;
+  scroll-behavior: smooth;
+  overscroll-behavior-y: none; /* Prevents scroll bounce lag */
+  -webkit-font-smoothing: antialiased;
+}
+
+.text-mono { font-family: var(--font-mono); }
+.text-muted { color: var(--text-muted); }
+.text-primary { color: var(--color-primary); }
+.text-bright { color: var(--text-bright); }
+h1, h2, h3, h4, h5, h6 { font-family: var(--font-heading); letter-spacing: -0.02em; }
+
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 2rem;
+  position: relative;
+  z-index: 10;
+}
+
+.section {
+  padding: 5rem 0;
+}
+
+/* Glowing Neon Section Titles (Like screenshot) */
+.section-glow-title {
+  font-family: var(--font-heading);
+  font-size: 2.8rem;
+  font-weight: 700;
+  color: #fff;
+  text-align: center;
+  margin-bottom: 3.5rem;
+  letter-spacing: -0.5px;
+  text-shadow: 
+    0 0 10px rgba(255, 255, 255, 0.5),
+    0 0 20px rgba(168, 85, 247, 0.8),
+    0 0 35px rgba(168, 85, 247, 0.6),
+    0 0 50px rgba(168, 85, 247, 0.4);
+}
+
+/* Base Card Style */
+.glass-panel {
+  background: rgba(15, 12, 25, 0.6); /* Deep translucent */
+  border: 1px solid rgba(168, 85, 247, 0.15);
+  border-radius: 16px;
+  backdrop-filter: blur(8px); /* Lowered from 20px for high performance */
+  -webkit-backdrop-filter: blur(8px);
+  position: relative;
+  transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+  box-shadow: 
+    0 10px 40px -10px rgba(0,0,0,0.8), 
+    inset 0 1px 0 rgba(255,255,255,0.05); /* Premium top highlight */
+  transform: translateZ(0); /* Hardware accelerate component */
+  will-change: transform, box-shadow;
+}
+
+.glass-panel:hover {
+  transform: translateY(-4px);
+  border-color: rgba(168, 85, 247, 0.4);
+  box-shadow: 
+    0 20px 40px -10px rgba(0,0,0,0.9), 
+    0 0 30px rgba(168,85,247,0.15),
+    inset 0 1px 0 rgba(255,255,255,0.1);
+}
+
+/* Pill Tags (Architecture/Skills) */
+.pill-tag {
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  color: #c0c0d0;
+  border-radius: 999px;
+  padding: 4px 12px;
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  display: inline-flex;
+  transition: all 0.2s;
+}
+
+.pill-tag:hover {
+  background: rgba(168, 85, 247, 0.15);
+  border-color: rgba(168, 85, 247, 0.4);
+  color: #fff;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 10px rgba(168, 85, 247, 0.2);
+}
+
+a {
+  text-decoration: none;
+  color: inherit;
+  transition: var(--transition-smooth);
+}
+
+::-webkit-scrollbar { width: 6px; }
+::-webkit-scrollbar-track { background: var(--bg-deep); }
+::-webkit-scrollbar-thumb { background: rgba(168, 85, 247, 0.5); border-radius: 4px; }
+::-webkit-scrollbar-thumb:hover { background: rgba(168, 85, 247, 0.8); }

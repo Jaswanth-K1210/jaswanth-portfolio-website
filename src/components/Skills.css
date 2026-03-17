@@ -1,0 +1,30 @@
+.skills-block-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 2rem;
+  max-width: 1100px;
+  margin: 0 auto;
+}
+
+.skill-box {
+  display: flex;
+  flex-direction: column;
+  padding: 2rem;
+}
+
+.skill-box-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 2rem;
+}
+
+.skill-box-header h3 {
+  font-size: 1.15rem;
+}
+
+.skill-pills {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+}

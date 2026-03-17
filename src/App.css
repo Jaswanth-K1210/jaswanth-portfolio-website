@@ -1,0 +1,26 @@
+.app-content {
+  position: relative;
+  z-index: 10;
+  width: 100%;
+}
+
+.canvas-container {
+  position: fixed !important;
+  top: 0;
+  left: 0;
+  width: 100vw !important;
+  height: 100vh !important;
+  z-index: 1;
+  pointer-events: none; /* Let clicks pass through, or manage carefully */
+}
+
+/* Let the canvas receive mouse events for parallax and interactions 
+   but content needs to be clickable. The content layer is above z-index 10.
+   We can give pointer-events: none to canvas but give pointer-events: auto 
+   to interactive 3d elements... wait, the easiest is to put the canvas behind,
+   and make the main content background transparent. Mouse events will hit the
+   document, and Three.js can use window mousemove listeners for parallax instead of raycasting.
+*/
+.app-content {
+  min-height: 100vh;
+}
