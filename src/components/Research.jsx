@@ -3,12 +3,12 @@ import React from 'react';
 import './Research.css';
 
 const focusAreas = [
-  'Agentic AI Systems',
-  'Multi-Agent Coordination',
-  'LLM Reasoning Architectures',
-  'Human-Aligned AI Systems',
-  'Decision Making Under Uncertainty',
-  'Explainable Machine Learning'
+  'Physics-Informed Neural Networks (PINNs)',
+  'Energy Conservation Constraints',
+  'Adaptive Loss Weighting Algorithms',
+  'Hamiltonian Mechanics in AI',
+  'Molecular Dynamics Simulation',
+  'Argon Atom Forecasting'
 ];
 
 export default function Research() {
@@ -32,14 +32,14 @@ export default function Research() {
           </div>
           
           <div className="desc-col text-mono text-muted">
-            <p>
-              My research explores how autonomous AI systems can reason, collaborate, and adapt in dynamic environments.
+            <p className="mb-4">
+              <span className="text-bright font-bold">The Baseline System:</span> I am highly invested in building a Physics-Informed Neural Dynamics Simulator. This acts as an AI surrogate model trained to accurately predict how a complex system of interacting particles (specifically Argon atoms) moves and evolves over time based on their positions and momentum.
+            </p>
+            <p className="mb-4">
+              <span className="text-bright font-bold">The Physics Constraint:</span> Because standard neural networks eventually violate the laws of physics and create "artificial energy", I engineer strict mathematical energy penalties into the AI's training architecture. By mathematically penalizing the network if it breaks the Hamiltonian law of energy conservation, the system generates highly stable, physically-accurate, long-term state simulations.
             </p>
             <p>
-              I study how multiple AI agents can coordinate to solve complex problems that require reasoning, planning, and data synthesis.
-            </p>
-            <p>
-              My work involves designing experimental pipelines, evaluating system behavior, and analyzing failure modes in real-world AI systems.
+              <span className="text-bright font-bold">Adaptive Loss Research:</span> Getting a neural network to perfectly balance learning from raw data and learning from hard physics equations is exceptionally difficult because their mathematical gradients often clash. To solve this, my research involves programming and benchmarking state-of-the-art adaptive loss weighting algorithms—specifically <span className="text-accent">ReLoBRaLo</span>, <span className="text-accent">GradNorm</span>, and <span className="text-accent">AL-PINNs</span>—to discover the most efficient way to train these energy-conserving models.
             </p>
           </div>
         </div>
