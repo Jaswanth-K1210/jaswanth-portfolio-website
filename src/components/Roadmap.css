@@ -8,14 +8,18 @@
 
 .timeline-line-bg {
   position: absolute;
-  top: 0; bottom: 0; left: 16px;
+  top: 0;
+  bottom: 0;
+  left: 16px;
   width: 2px;
   background: rgba(0, 229, 255, 0.1);
 }
 
 .timeline-line-fill {
   position: absolute;
-  top: 0; bottom: 0; left: 16px;
+  top: 0;
+  bottom: 0;
+  left: 16px;
   width: 2px;
   background: var(--color-primary);
   transform-origin: top;
@@ -31,8 +35,10 @@
 
 .timeline-dot {
   position: absolute;
-  left: 11px; top: 15px;
-  width: 12px; height: 12px;
+  left: 11px;
+  top: 15px;
+  width: 12px;
+  height: 12px;
   background: var(--bg-deep);
   border: 2px solid var(--color-primary);
   border-radius: 0;
@@ -76,6 +82,11 @@
 }
 
 @media (max-width: 768px) {
-  .roadmap-container { padding-top: 2rem; }
-  .timeline-content { padding: 1.5rem; }
+  .roadmap-container {
+    padding-top: 2rem;
+  }
+
+  .timeline-content {
+    padding: 1.5rem;
+  }
 }

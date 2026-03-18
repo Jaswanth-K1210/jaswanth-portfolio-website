@@ -15,7 +15,7 @@ function App() {
     <>
       {/* 3D Global Scene */}
       <NetworkBackground />
-      
+
       {/* Scrollable Content */}
       <div className="app-content">
         <Hero />
