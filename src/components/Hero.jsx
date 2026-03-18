@@ -1,6 +1,6 @@
 import React from 'react';
 
-import { Github, FileText, Bot, Linkedin } from 'lucide-react';
+import { Github, FileText, Bot, Linkedin, Code, Mail, Activity } from 'lucide-react';
 import './Hero.css';
 
 export default function Hero() {
@@ -39,7 +39,7 @@ export default function Hero() {
             <a href="https://github.com/Jaswanth-K1210" target="_blank" rel="noreferrer" className="link-item">
               <Github size={18} /> Github Profile
             </a>
-            <a href="https://linkedin.com/in/jaswanthkoppisetty" target="_blank" rel="noreferrer" className="link-item">
+            <a href="https://www.linkedin.com/in/jaswanth-koppisetty/" target="_blank" rel="noreferrer" className="link-item">
               <Linkedin size={18} /> LinkedIn Profile
             </a>
             <a href="#research" className="link-item">
@@ -54,40 +54,60 @@ export default function Hero() {
         >
           <div className="profile-visual-wrapper">
 
-            {/* The Outer Dashed Purple Ring */}
-            <div className="circle-dashed"></div>
+            <div className="atom-system">
+              {/* Nucleus */}
+              <div className="center-nucleus">
+                <img src="/Profile.jpg" alt="Jaswanth Koppisetty" className="profile-img" style={{ objectPosition: ' center', transform: 'scale(1.9)', transformOrigin: ' center' }} />
+              </div>
 
-            <div className="circle-solid">
-              <img src="/Profile.jpg" alt="Jaswanth Koppisetty" className="profile-img" style={{ objectPosition: ' center', transform: 'scale(1.9)', transformOrigin: ' center' }} />
+              {/* Ring 1: LinkedIn, GitHub & LeetCode */}
+              <div className="orbit-ring ring-1">
+                <div className="electron-wrapper" style={{ animationDelay: '0s' }}>
+                  <div className="electron-node node-1" style={{ animationDelay: '0s' }}>
+                    <a href="https://www.linkedin.com/in/jaswanth-koppisetty/" target="_blank" rel="noreferrer" className="satellite-content">
+                      <Linkedin size={20} color="#14f1d9" />
+                      <span className="node-tooltip">LinkedIn Profile</span>
+                    </a>
+                  </div>
+                </div>
+                <div className="electron-wrapper" style={{ animationDelay: '-6.6s' }}>
+                  <div className="electron-node node-1" style={{ animationDelay: '-6.6s' }}>
+                    <a href="https://github.com/Jaswanth-K1210" target="_blank" rel="noreferrer" className="satellite-content">
+                      <Github size={20} color="#14f1d9" />
+                      <span className="node-tooltip">GitHub Profile</span>
+                    </a>
+                  </div>
+                </div>
+                <div className="electron-wrapper" style={{ animationDelay: '-13.3s' }}>
+                  <div className="electron-node node-1" style={{ animationDelay: '-13.3s' }}>
+                    <a href="https://leetcode.com/u/a5S3b6vtks/" target="_blank" rel="noreferrer" className="satellite-content">
+                      <Code size={20} color="#14f1d9" />
+                      <span className="node-tooltip">LeetCode Profile</span>
+                    </a>
+                  </div>
+                </div>
+              </div>
+
+              {/* Ring 2: Nexus Mail & Market Pulse */}
+              <div className="orbit-ring ring-2">
+                <div className="electron-wrapper" style={{ animationDelay: '-4s' }}>
+                  <div className="electron-node node-2" style={{ animationDelay: '-4s' }}>
+                    <a href="https://nexus-mail.me" target="_blank" rel="noreferrer" className="satellite-content">
+                      <Mail size={20} color="#14f1d9" />
+                      <span className="node-tooltip">Nexus Mail Live</span>
+                    </a>
+                  </div>
+                </div>
+                <div className="electron-wrapper" style={{ animationDelay: '-14s' }}>
+                  <div className="electron-node node-2" style={{ animationDelay: '-14s' }}>
+                    <a href="https://market-pulse-jet.vercel.app" target="_blank" rel="noreferrer" className="satellite-content">
+                      <Activity size={20} color="#14f1d9" />
+                      <span className="node-tooltip">Market Pulse Live</span>
+                    </a>
+                  </div>
+                </div>
+              </div>
             </div>
-
-            {/* Floating Card: Connect LinkedIn */}
-            <a
-              href="https://linkedin.com/in/jaswanthkoppisetty"
-              target="_blank"
-              rel="noreferrer"
-              className="float-card feedback-card"
-            >
-              <div className="follow-icon"><Linkedin size={20} color="#8b5cf6" /></div>
-              <div className="follow-info text-mono">
-                <span className="text-muted" style={{ fontSize: '0.75rem' }}>Connect on LinkedIn</span>
-                <span className="text-bright font-bold" style={{ textDecoration: 'none' }}>@jaswanth</span>
-              </div>
-            </a>
-
-            {/* Floating Card: Follow Github */}
-            <a
-              href="https://github.com/Jaswanth-K1210"
-              target="_blank"
-              rel="noreferrer"
-              className="float-card follow-card"
-            >
-              <div className="follow-icon"><Github size={20} fill="#8b5cf6" stroke="none" /></div>
-              <div className="follow-info text-mono">
-                <span className="text-muted" style={{ fontSize: '0.75rem' }}>Follow on Github</span>
-                <span className="text-bright font-bold" style={{ textDecoration: 'none' }}>@Jaswanth-K1210</span>
-              </div>
-            </a>
 
           </div>
         </div>

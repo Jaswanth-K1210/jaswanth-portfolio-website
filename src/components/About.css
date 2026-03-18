@@ -32,7 +32,7 @@
   font-size: 0.8rem;
   line-height: 1.6;
   position: absolute;
-  box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
 }
 
 .block-1 {
@@ -63,6 +63,11 @@
 }
 
 @media (max-width: 900px) {
-  .about-layout-split { grid-template-columns: 1fr; }
-  .about-ide-blocks { display: none; }
+  .about-layout-split {
+    grid-template-columns: 1fr;
+  }
+
+  .about-ide-blocks {
+    display: none;
+  }
 }
