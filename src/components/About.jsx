@@ -1,36 +1,32 @@
 import React from 'react';
 
 import './About.css';
+import { profile } from '../data';
 
 export default function About() {
+  const { education } = profile;
+
   return (
     <section className="section container" id="about">
       <h2 className="section-glow-title">About Me</h2>
 
       <div className="about-layout-split">
-        <div
-          className="about-text-content text-mono"
-        >
+        <div className="about-text-content text-mono">
           <p>
-            My name is Jaswanth Koppisetty and I am a rigorous systems engineer and AI researcher. My work sits at the intersection of deep machine learning and physics equations, focusing on building neural network architectures that operate under strict mathematical constraints.
+            My name is {profile.name}. {profile.headline}
           </p>
+          <p>{profile.subheadline}</p>
           <p>
-            I am currently pursuing a Bachelor of Technology in Computer Science and Engineering at Anurag University with a CGPA of 8.7.
+            I am currently pursuing a {education.degree} at {education.institution} ({education.batch}),
+            graduating {education.graduation}, with a CGPA of {education.cgpa}.
           </p>
-          <p>
-            I specialize in developing Physics-Informed Neural Dynamics Simulators. It's incredibly difficult to get standard neural networks to perfectly balance learning from raw data while simultaneously obeying the laws of physical conservation, which is why my current research involves evaluating adaptive loss weighting algorithms to forge stable, long-term AI surrogate models.
-          </p>
-          <p>
-            Alongside my core research, I have engineered full-scale, distributed production systems involving multi-agent AI orchestrations, asynchronous task queues, and real-time decentralized communication arrays.
-          </p>
-          <p>
-            During my machine learning research internship with the Swecha initiative at IIIT Hyderabad, I worked on low-resource NLP research for Telugu language systems. My work involved building data preparation pipelines, cleaning over 100K data points, and mapping 50+ hours of audio to textual pairs for ASR model training using deep learning frameworks.
-          </p>
+          <p>{profile.status}. Based in {profile.location}.</p>
+          {profile.languages?.length > 0 && (
+            <p>Languages: {profile.languages.join(' · ')}.</p>
+          )}
         </div>
 
-        <div
-          className="about-ide-blocks"
-        >
+        <div className="about-ide-blocks">
           {/* Mock Code Block 1 */}
           <div className="code-block block-1 glass-panel text-mono">
             <span style={{ color: '#c678dd' }}>def</span> <span style={{ color: '#61afef' }}>build_system</span>(self):<br />

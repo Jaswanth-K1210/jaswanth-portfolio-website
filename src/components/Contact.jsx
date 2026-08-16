@@ -2,6 +2,16 @@ import React from 'react';
 
 import { Mail, Github, Linkedin, ExternalLink, Radio } from 'lucide-react';
 import './Contact.css';
+import { profile, links } from '../data';
+
+const email = profile.email || links.email;
+
+/* Only links that actually exist in data.js are rendered. */
+const contactLinks = [
+  email && { label: '> SMTP // E-MAIL', href: `mailto:${email}`, Icon: Mail, external: false },
+  links.github && { label: '> REPO // GITHUB', href: links.github, Icon: Github, external: true },
+  links.linkedin && { label: '> NET // LINKEDIN', href: links.linkedin, Icon: Linkedin, external: true },
+].filter(Boolean);
 
 export default function Contact() {
   return (
@@ -13,9 +23,7 @@ export default function Contact() {
         </div>
       </div>
 
-      <div
-        className="contact-panel glass-panel"
-      >
+      <div className="contact-panel glass-panel">
         <div className="panel-header" style={{ borderColor: 'var(--color-primary-dim)' }}>
           <span className="text-muted">[ NODE_ACCESS: OPEN ]</span>
           <span className="text-primary text-mono">AWAITING_HANDSHAKE</span>
@@ -25,34 +33,32 @@ export default function Contact() {
           <div className="contact-intel">
             <h3 className="text-primary text-mono mb-2" style={{ fontSize: '1.2rem' }}>&gt; INITIATE_DIALOGUE</h3>
             <p className="text-muted" style={{ lineHeight: '1.6', fontSize: '0.95rem' }}>
-              Whether you want to discuss Physics-Informed Neural Dynamics, deployable multi-agent environments, or full-stack engineering roles—my communication ports are open and polling.
+              {profile.status}. Based in {profile.location}.
             </p>
           </div>
 
           <div className="contact-links text-mono text-primary">
-            <a href="mailto:jaswanth.koppisetty@example.com" className="contact-btn">
-              <Mail size={18} className="mr-3 text-accent" />
-              <span>&gt; SMTP // E-MAIL</span>
-              <ExternalLink size={14} className="ml-auto text-muted" />
-            </a>
-
-            <a href="https://github.com/Jaswanth-K1210" target="_blank" rel="noopener noreferrer" className="contact-btn">
-              <Github size={18} className="mr-3 text-accent" />
-              <span>&gt; REPO // GITHUB</span>
-              <ExternalLink size={14} className="ml-auto text-muted" />
-            </a>
-
-            <a href="https://www.linkedin.com/in/jaswanth-koppisetty/" target="_blank" rel="noopener noreferrer" className="contact-btn">
-              <Linkedin size={18} className="mr-3 text-accent" />
-              <span>&gt; NET // LINKEDIN</span>
-              <ExternalLink size={14} className="ml-auto text-muted" />
-            </a>
+            {contactLinks.map((link) => {
+              const { Icon } = link;
+              return (
+                <a
+                  key={link.label}
+                  href={link.href}
+                  {...(link.external ? { target: '_blank', rel: 'noopener noreferrer' } : {})}
+                  className="contact-btn"
+                >
+                  <Icon size={18} className="mr-3 text-accent" />
+                  <span>{link.label}</span>
+                  <ExternalLink size={14} className="ml-auto text-muted" />
+                </a>
+              );
+            })}
           </div>
         </div>
       </div>
 
       <div className="footer-bottom text-mono text-muted mt-5">
-        <p>SYSTEM_HALTED. &copy; {new Date().getFullYear()} Jaswanth Koppisetty. AI Systems Engineer.</p>
+        <p>SYSTEM_HALTED. &copy; {new Date().getFullYear()} {profile.name}.</p>
       </div>
     </footer>
   );
