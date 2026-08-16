@@ -3,16 +3,13 @@
 :root {
   --bg-deep: #060913;
   --bg-card: rgba(13, 18, 30, 0.6);
-  /* Deep glossy blue for cards */
 
   --color-primary: #a855f7;
-  /* KEEP PURPLE HERE FOR THE HERO SECTION */
   --color-primary-dim: rgba(168, 85, 247, 0.15);
-  
-  --color-terminal: #14f1d9; /* Elegant Teal/Cyan */
+
+  --color-terminal: #14f1d9;
   --color-terminal-dim: rgba(20, 241, 217, 0.15);
   --color-accent: #8b5cf6;
-  /* Sleek Violet */
 
   --text-main: #94a3b8;
   --text-muted: #64748b;
@@ -25,6 +22,10 @@
   --border-subtle: 1px solid rgba(20, 241, 217, 0.15);
 
   --transition-smooth: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+
+  /* Fluid spacing scale */
+  --space-section: clamp(3rem, 6vw, 6rem);
+  --space-container: clamp(1rem, 4vw, 2rem);
 }
 
 *,
@@ -38,19 +39,35 @@
 html,
 body {
   width: 100%;
-  height: 100%;
-  background-color: var(--bg-deep);
-  background: radial-gradient(circle at 50% 0%, rgba(20, 241, 217, 0.08) 0%, var(--bg-deep) 60%),
-              linear-gradient(rgba(255, 255, 255, 0.02) 1px, transparent 1px),
-              linear-gradient(90deg, rgba(255, 255, 255, 0.02) 1px, transparent 1px);
+  /* min-height, not height: `height: 100%` combined with `overflow-x: hidden`
+     pins the document to the viewport, so anything below the fold overflows
+     and the page cannot scroll at all. */
+  min-height: 100%;
+  background: radial-gradient(circle at 50% 0%, rgba(20, 241, 217, 0.06) 0%, var(--bg-deep) 60%),
+              linear-gradient(rgba(255, 255, 255, 0.015) 1px, transparent 1px),
+              linear-gradient(90deg, rgba(255, 255, 255, 0.015) 1px, transparent 1px);
   background-size: 100% 100%, 40px 40px, 40px 40px;
+  /* Must come AFTER the `background` shorthand — the shorthand resets
+     background-color to transparent, which leaves uncovered areas white
+     once the document grows taller than the viewport. */
+  background-color: var(--bg-deep);
+  background-attachment: fixed;
   color: var(--text-main);
   font-family: var(--font-body);
-  overflow-x: hidden;
   scroll-behavior: smooth;
-  overscroll-behavior-y: none;
-  /* Prevents scroll bounce lag */
   -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+}
+
+/* These two belong on `html` alone, never on `body`.
+   `overflow-x: hidden` on body forces its overflow-y to `auto`, which promotes
+   body to a scroll container that cannot itself scroll. `overscroll-behavior-y:
+   none` then stops wheel events from chaining up to the real document scroller,
+   so the page scrolls by keyboard but not by mouse wheel or trackpad. */
+html {
+  overflow-x: hidden;
+  overscroll-behavior-y: none;
 }
 
 .text-mono {
@@ -69,6 +86,10 @@ body {
   color: var(--text-bright);
 }
 
+.text-accent {
+  color: var(--color-accent);
+}
+
 h1,
 h2,
 h3,
@@ -82,22 +103,25 @@ h6 {
 .container {
   max-width: 1200px;
   margin: 0 auto;
-  padding: 0 2rem;
+  padding: 0 var(--space-container);
   position: relative;
   z-index: 10;
 }
 
 .section {
-  padding: 5rem 0;
+  padding: var(--space-section) 0;
+  /* The navbar is position: fixed, so anchor jumps would otherwise land with
+     the section heading hidden underneath it. */
+  scroll-margin-top: 7rem;
 }
 
-/* Glowing Neon Section Titles -> Terminal Prompt */
+/* Section Titles */
 .section-glow-title {
   font-family: var(--font-mono);
-  font-size: 2.2rem;
+  font-size: clamp(1.4rem, 3.5vw, 2.2rem);
   font-weight: 600;
   text-align: left;
-  margin-bottom: 3.5rem;
+  margin-bottom: clamp(2rem, 4vw, 3.5rem);
   letter-spacing: -0.5px;
   background: linear-gradient(135deg, #14f1d9, #3b82f6);
   -webkit-background-clip: text;
@@ -105,19 +129,20 @@ h6 {
   background-clip: text;
   display: flex;
   align-items: center;
-  border-bottom: 1px solid rgba(20, 241, 217, 0.2);
+  border-bottom: 1px solid rgba(20, 241, 217, 0.12);
   padding-bottom: 0.75rem;
   text-transform: uppercase;
   position: relative;
 }
 
 .section-glow-title::before {
-  content: "sys_admin@nexus:~# ";
+  content: "~# ";
   color: #64748b;
-  font-size: 1.2rem;
+  font-size: clamp(0.8rem, 1.5vw, 1.2rem);
   font-weight: 500;
-  margin-right: 15px;
+  margin-right: 10px;
   -webkit-text-fill-color: initial;
+  flex-shrink: 0;
 }
 
 .section-glow-title::after {
@@ -126,6 +151,7 @@ h6 {
   color: var(--color-terminal);
   animation: terminal-blink 1s step-end infinite;
   -webkit-text-fill-color: initial;
+  font-size: 0.8em;
 }
 
 @keyframes terminal-blink {
@@ -135,78 +161,82 @@ h6 {
 
 /* Base Card Style */
 .glass-panel {
-  background: linear-gradient(145deg, rgba(20, 25, 40, 0.6), rgba(10, 15, 25, 0.8));
-  /* Deep translucent */
-  border: 1px solid rgba(20, 241, 217, 0.1);
-  border-radius: 8px; /* Square off */
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
+  background: linear-gradient(145deg, rgba(20, 25, 40, 0.5), rgba(10, 15, 25, 0.7));
+  border: 1px solid rgba(20, 241, 217, 0.08);
+  border-radius: 16px;
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
   position: relative;
-  transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+  transition: all 0.5s cubic-bezier(0.16, 1, 0.3, 1);
   box-shadow:
-    0 4px 20px -5px rgba(0, 0, 0, 0.8),
-    inset 0 1px 0 rgba(255, 255, 255, 0.05);
+    0 4px 24px -6px rgba(0, 0, 0, 0.6),
+    inset 0 1px 0 rgba(255, 255, 255, 0.04);
   transform: translateZ(0);
-  /* Hardware accelerate component */
   will-change: transform, box-shadow;
 }
 
 .glass-panel:hover {
-  transform: translateY(-4px);
-  border-color: rgba(20, 241, 217, 0.4);
+  transform: translateY(-3px);
+  border-color: rgba(20, 241, 217, 0.25);
   box-shadow:
-    0 15px 35px -5px rgba(0, 0, 0, 0.8),
-    0 0 20px rgba(20, 241, 217, 0.15),
-    inset 0 1px 0 rgba(255, 255, 255, 0.1);
+    0 20px 40px -8px rgba(0, 0, 0, 0.6),
+    0 0 30px rgba(20, 241, 217, 0.08),
+    inset 0 1px 0 rgba(255, 255, 255, 0.08);
 }
 
-/* Pill Tags (Architecture/Skills) */
+/* Pill Tags */
 .pill-tag {
-  background: rgba(20, 241, 217, 0.05);
-  border: 1px solid rgba(20, 241, 217, 0.2);
+  background: rgba(20, 241, 217, 0.04);
+  border: 1px solid rgba(20, 241, 217, 0.15);
   color: var(--color-terminal);
-  border-radius: 4px;
-  padding: 4px 12px;
+  border-radius: 6px;
+  padding: 5px 12px;
   font-family: var(--font-mono);
-  font-size: 0.75rem;
+  font-size: 0.72rem;
   display: inline-flex;
-  transition: all 0.2s;
+  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
   text-transform: uppercase;
+  letter-spacing: 0.3px;
 }
 
 .pill-tag:hover {
-  background: rgba(20, 241, 217, 0.15);
-  border-color: rgba(20, 241, 217, 0.6);
+  background: rgba(20, 241, 217, 0.12);
+  border-color: rgba(20, 241, 217, 0.4);
   color: #fff;
-  transform: translateY(-2px);
-  box-shadow: 0 4px 12px rgba(20, 241, 217, 0.2);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(20, 241, 217, 0.15);
 }
 
-/* Shared Terminal Section Headers applied manually to some components */
+/* Terminal Section Headers */
 .section-header-terminal {
   font-family: var(--font-mono);
   color: var(--color-terminal);
-  border-bottom: 1px solid rgba(20, 241, 217, 0.2);
+  border-bottom: 1px solid rgba(20, 241, 217, 0.12);
   padding-bottom: 1rem;
-  margin-bottom: 3rem;
+  margin-bottom: clamp(2rem, 4vw, 3rem);
   display: flex;
   justify-content: space-between;
   align-items: flex-end;
+  flex-wrap: wrap;
+  gap: 0.5rem;
 }
+
 .section-header-terminal h2 {
-  font-size: 1.5rem;
+  font-size: clamp(1rem, 2vw, 1.5rem);
   display: flex;
   align-items: center;
-  gap: 15px;
+  gap: 12px;
   margin: 0;
   letter-spacing: 1px;
 }
+
 .section-stats {
   font-family: var(--font-mono);
   font-size: 0.85rem;
   letter-spacing: 1px;
   color: var(--text-muted) !important;
 }
+
 .blink {
   animation: terminal-blink 1s step-end infinite;
   color: var(--color-terminal);
@@ -227,10 +257,29 @@ a {
 }
 
 ::-webkit-scrollbar-thumb {
-  background: rgba(20, 241, 217, 0.3);
+  background: rgba(20, 241, 217, 0.2);
   border-radius: 4px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: rgba(20, 241, 217, 0.6);
+  background: rgba(20, 241, 217, 0.4);
+}
+
+/* Disable hover effects on touch devices for cleaner mobile experience */
+@media (hover: none) {
+  .glass-panel:hover {
+    transform: none;
+    border-color: rgba(20, 241, 217, 0.08);
+    box-shadow:
+      0 4px 24px -6px rgba(0, 0, 0, 0.6),
+      inset 0 1px 0 rgba(255, 255, 255, 0.04);
+  }
+
+  .pill-tag:hover {
+    transform: none;
+    background: rgba(20, 241, 217, 0.04);
+    border-color: rgba(20, 241, 217, 0.15);
+    color: var(--color-terminal);
+    box-shadow: none;
+  }
 }
