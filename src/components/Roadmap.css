@@ -12,7 +12,7 @@
   bottom: 0;
   left: 16px;
   width: 2px;
-  background: rgba(0, 229, 255, 0.1);
+  background: rgba(0, 229, 255, 0.08);
 }
 
 .timeline-line-fill {
@@ -23,13 +23,13 @@
   width: 2px;
   background: var(--color-primary);
   transform-origin: top;
-  box-shadow: 0 0 10px var(--color-primary);
+  box-shadow: 0 0 8px var(--color-primary);
 }
 
 .timeline-block {
   position: relative;
-  padding-left: 60px;
-  margin-bottom: 2rem;
+  padding-left: clamp(45px, 6vw, 60px);
+  margin-bottom: 1.5rem;
   width: 100%;
 }
 
@@ -43,50 +43,75 @@
   border: 2px solid var(--color-primary);
   border-radius: 0;
   z-index: 2;
-  transition: all 0.3s;
+  transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 .timeline-block:hover .timeline-dot {
   background: var(--color-primary);
-  box-shadow: 0 0 10px var(--color-primary);
+  box-shadow: 0 0 12px var(--color-primary);
 }
 
 .timeline-content {
-  padding: 1.5rem 2rem;
+  padding: clamp(1rem, 2.5vw, 1.5rem) clamp(1.25rem, 3vw, 2rem);
   width: 100%;
-  transition: all 0.3s;
+  transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 .timeline-block:hover .timeline-content {
-  transform: translateX(10px);
-  border-color: rgba(0, 229, 255, 0.4);
+  transform: translateX(6px);
+  border-color: rgba(0, 229, 255, 0.25);
 }
 
 .timeline-year {
-  font-size: 0.95rem;
+  font-size: clamp(0.82rem, 1.2vw, 0.95rem);
   font-weight: 500;
   display: inline-block;
   margin-bottom: 0.25rem;
 }
 
 .timeline-title {
-  font-size: 1.15rem;
+  font-size: clamp(0.95rem, 1.4vw, 1.15rem);
   color: #fff;
-  margin-bottom: 0.85rem;
+  margin-bottom: 0.6rem;
 }
 
 .timeline-desc {
   color: var(--text-muted);
-  line-height: 1.5;
-  font-size: 0.9rem;
+  line-height: 1.6;
+  font-size: clamp(0.82rem, 1.1vw, 0.9rem);
 }
 
 @media (max-width: 768px) {
   .roadmap-container {
-    padding-top: 2rem;
+    padding-top: 1rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .timeline-block {
+    padding-left: 40px;
   }
 
-  .timeline-content {
-    padding: 1.5rem;
+  .timeline-line-bg,
+  .timeline-line-fill {
+    left: 12px;
+  }
+
+  .timeline-dot {
+    left: 7px;
+    width: 10px;
+    height: 10px;
+  }
+}
+
+@media (hover: none) {
+  .timeline-block:hover .timeline-content {
+    transform: none;
+    border-color: rgba(20, 241, 217, 0.08);
+  }
+
+  .timeline-block:hover .timeline-dot {
+    background: var(--bg-deep);
+    box-shadow: none;
   }
 }
