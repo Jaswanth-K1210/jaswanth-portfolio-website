@@ -1,48 +1,82 @@
 import React from 'react';
 
+import { ArrowRight } from 'lucide-react';
 import './Research.css';
-
-const focusAreas = [
-  'Physics-Informed Neural Networks (PINNs)',
-  'Energy Conservation Constraints',
-  'Adaptive Loss Weighting Algorithms',
-  'Hamiltonian Mechanics in AI',
-  'Molecular Dynamics Simulation',
-  'Argon Atom Forecasting'
-];
+import { research, getProject } from '../data';
 
 export default function Research() {
   return (
     <section className="section container" id="research">
       <h2 className="section-glow-title">Research</h2>
 
-      <div 
-        className="research-box glass-panel"
-      >
-        <div className="research-grid">
-          <div className="focus-col">
-            <h3 className="text-primary text-mono focus-header">Focus Areas</h3>
-            <div className="focus-list">
-              {focusAreas.map((area, idx) => (
-                <div key={idx} className="focus-pill text-mono">
-                  {area}
+      <div className="research-stack">
+        {research.map((entry) => {
+          const proof = entry.projectSlug ? getProject(entry.projectSlug) : null;
+          const findings = entry.findings || [];
+          /* The headline result, when the linked project records one. */
+          const identity = proof?.metrics?.[0];
+
+          return (
+            <article className="research-entry glass-panel" key={entry.title}>
+              <header className="research-entry__head">
+                <div className="research-entry__badges">
+                  <span className="research-status text-mono">{entry.status}</span>
+                  {entry.collaborator && (
+                    <span className="research-collab text-mono">{entry.collaborator}</span>
+                  )}
                 </div>
-              ))}
-            </div>
-          </div>
-          
-          <div className="desc-col text-mono text-muted">
-            <p className="mb-4">
-              <span className="text-bright font-bold">The Baseline System:</span> I am highly invested in building a Physics-Informed Neural Dynamics Simulator. This acts as an AI surrogate model trained to accurately predict how a complex system of interacting particles (specifically Argon atoms) moves and evolves over time based on their positions and momentum.
-            </p>
-            <p className="mb-4">
-              <span className="text-bright font-bold">The Physics Constraint:</span> Because standard neural networks eventually violate the laws of physics and create "artificial energy", I engineer strict mathematical energy penalties into the AI's training architecture. By mathematically penalizing the network if it breaks the Hamiltonian law of energy conservation, the system generates highly stable, physically-accurate, long-term state simulations.
-            </p>
-            <p>
-              <span className="text-bright font-bold">Adaptive Loss Research:</span> Getting a neural network to perfectly balance learning from raw data and learning from hard physics equations is exceptionally difficult because their mathematical gradients often clash. To solve this, my research involves programming and benchmarking state-of-the-art adaptive loss weighting algorithms—specifically <span className="text-accent">ReLoBRaLo</span>, <span className="text-accent">GradNorm</span>, and <span className="text-accent">AL-PINNs</span>—to discover the most efficient way to train these energy-conserving models.
-            </p>
-          </div>
-        </div>
+                <h3 className="research-entry__title text-bright">{entry.title}</h3>
+                <p className="research-entry__summary text-muted">{entry.summary}</p>
+              </header>
+
+              {identity && (
+                <div className="research-identity">
+                  <span className="research-identity__label text-mono">{identity.label}</span>
+                  <code className="research-identity__value text-mono">{identity.value}</code>
+                </div>
+              )}
+
+              {findings.length > 0 && (
+                <div className="research-findings">
+                  <h4 className="research-findings__label text-mono">Verdicts</h4>
+                  <dl className="verdict-table">
+                    {findings.map((f) => (
+                      <div className={`verdict verdict--${f.outcome}`} key={f.probe}>
+                        <dt className="verdict__probe text-mono">{f.probe}</dt>
+                        <dd className="verdict__result text-mono">
+                          {f.verdict}
+                          <span className="verdict__flag">{f.outcome}</span>
+                        </dd>
+                      </div>
+                    ))}
+                  </dl>
+                </div>
+              )}
+
+              <footer className="research-entry__foot">
+                {proof?.stack?.length > 0 && (
+                  <div className="research-stack-tags">
+                    {proof.stack.map((s) => (
+                      <span className="pill-tag" key={s}>{s}</span>
+                    ))}
+                  </div>
+                )}
+
+                {proof?.links?.filter((l) => l.href).map((l) => (
+                  <a
+                    key={l.label}
+                    href={l.href}
+                    target="_blank"
+                    rel="noreferrer"
+                    className="proj-link text-mono"
+                  >
+                    {l.label} <ArrowRight size={14} />
+                  </a>
+                ))}
+              </footer>
+            </article>
+          );
+        })}
       </div>
     </section>
   );
