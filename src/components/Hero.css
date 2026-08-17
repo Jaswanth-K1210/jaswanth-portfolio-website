@@ -65,7 +65,7 @@
   text-decoration: none;
   white-space: nowrap;
   color: #fff;
-  background: linear-gradient(135deg, #a855f7, #7c3aed);
+  background: linear-gradient(135deg, var(--signal), var(--signal));
   transition: filter 0.25s ease, transform 0.25s ease;
 }
 
@@ -122,9 +122,9 @@
    headline. Remove nothing here when the PNGs land; the class just stops
    being applied. */
 .hero-avatar-layers.is-fallback .hero-reveal-img--base {
-  background-size: auto 78%;
-  background-position: right 4vw bottom;
-  opacity: 0.55;
+  background-size: auto 74%;
+  background-position: right 3vw bottom;
+  opacity: 0.16;
 }
 
 /* Scrim keeps the copy column readable over whichever image is showing. */
@@ -155,27 +155,71 @@
   z-index: 2;
   width: 100%;
   padding-bottom: clamp(3rem, 8vh, 6rem);
-  padding-top: 8rem;
-  display: flex;
-  flex-direction: column;
-  gap: 1.15rem;
-  align-items: flex-start;
+  padding-top: 9rem;
+  display: grid;
+  grid-template-columns: minmax(0, 7fr) minmax(0, 4fr);
+  grid-template-areas:
+    'mark mark'
+    'head meta'
+    'sub  meta'
+    'act  act';
+  column-gap: clamp(1.5rem, 4vw, 3.5rem);
+  row-gap: 1.15rem;
+  align-items: start;
 }
 
-.hero-eyebrow {
-  font-size: 0.72rem;
-  letter-spacing: 0.22em;
+/* ---- SIGNATURE: the wordmark carries the portrait ----------------------
+   The name is set oversized and bleeds past the copy column; the avatar is
+   clipped INTO the letterforms. Declared solid first so every browser gets
+   readable type, then upgraded only where background-clip: text is real. */
+.hero-wordmark {
+  grid-area: mark;
+  font-family: var(--font-heading);
+  font-variation-settings: 'wdth' 125;
+  font-weight: 800;
+  font-size: clamp(2.6rem, 11vw, 8.5rem);
+  line-height: 0.86;
+  letter-spacing: -0.045em;
   text-transform: uppercase;
-  color: var(--color-terminal);
+  margin-left: -0.06em;
+  margin-bottom: var(--s-2);
+  /* Fallback: solid, always legible. */
+  color: var(--text-bright);
+  background-repeat: no-repeat;
+  background-size: cover;
+  background-position: center 22%;
+}
+
+@supports ((-webkit-background-clip: text) or (background-clip: text)) {
+  .hero-wordmark {
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    color: transparent;
+    /* A hairline keeps the mark readable wherever the image goes dark. */
+    -webkit-text-stroke: 1.5px var(--rule);
+  }
+
+  /* The photo fallback is a rectangular snapshot rather than a cutout, so it
+     is desaturated and lifted before being clipped, or the letterforms read
+     as noise. */
+  .hero-wordmark.is-fallback {
+    background-size: 165% auto;
+    background-position: center 34%;
+    filter: saturate(0.35) contrast(0.92) brightness(1.85);
+  }
 }
 
 .hero-headline {
-  font-size: clamp(2.1rem, 6.2vw, 4.6rem);
-  line-height: 1.04;
-  letter-spacing: -0.03em;
-  font-weight: 700;
+  grid-area: head;
+  font-family: var(--font-body);
+  font-optical-sizing: auto;
+  font-size: clamp(1.35rem, 2.9vw, 2.35rem);
+  line-height: 1.28;
+  letter-spacing: -0.012em;
+  font-weight: 400;
   color: var(--text-bright);
-  max-width: 17ch;
+  max-width: 22ch;
   text-wrap: balance;
 }
 
@@ -195,6 +239,7 @@
 }
 
 .hero-sub {
+  grid-area: sub;
   font-size: clamp(0.92rem, 1.5vw, 1.05rem);
   line-height: 1.7;
   color: var(--text-main);
@@ -202,25 +247,36 @@
 }
 
 .hero-status {
+  grid-area: meta;
+  align-self: start;
   display: inline-flex;
-  align-items: center;
+  align-items: flex-start;
   gap: 0.6rem;
-  font-size: 0.75rem;
+  font-size: var(--t-label);
+  line-height: 1.6;
   letter-spacing: 0.06em;
-  color: var(--text-muted);
+  text-transform: uppercase;
+  color: var(--text-main);
+  background: var(--plate);
+  border: 1px solid var(--rule);
+  border-left: 2px solid var(--signal);
+  border-radius: var(--r-sm);
+  padding: var(--s-3) var(--s-4);
 }
 
 .hero-status-dot {
-  width: 7px;
-  height: 7px;
+  margin-top: 0.45em;
+  width: 6px;
+  height: 6px;
   border-radius: 50%;
   background: var(--color-terminal);
-  box-shadow: 0 0 0 3px rgba(20, 241, 217, 0.15);
+  box-shadow: 0 0 0 3px var(--signal-wash);
   flex-shrink: 0;
 }
 
 /* ---- actions ----------------------------------------------------------- */
 .hero-actions {
+  grid-area: act;
   display: flex;
   flex-wrap: wrap;
   align-items: center;
@@ -235,7 +291,7 @@
   gap: 0.9rem;
   padding: 0.6rem 0.6rem 0.6rem 1.5rem;
   border-radius: 999px;
-  background: #f1f5f9;
+  background: var(--text-bright);
   color: #0b0f18;
   text-decoration: none;
   font-weight: 600;
@@ -314,6 +370,11 @@
 
 /* ---- responsive -------------------------------------------------------- */
 @media (max-width: 900px) {
+  .hero-copy {
+    grid-template-columns: minmax(0, 1fr);
+    grid-template-areas: 'mark' 'head' 'sub' 'meta' 'act';
+  }
+
   .nav-links {
     display: none;
   }

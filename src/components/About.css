@@ -54,7 +54,7 @@
 .decor-brackets {
   font-size: clamp(8rem, 15vw, 15rem);
   font-weight: 800;
-  color: rgba(168, 85, 247, 0.06);
+  color: var(--signal-wash);
   position: absolute;
   top: 50%;
   left: 50%;

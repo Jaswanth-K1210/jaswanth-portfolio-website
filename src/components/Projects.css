@@ -213,7 +213,7 @@
 .more-pill:hover,
 .more-pill:focus-visible {
   border-color: var(--color-terminal);
-  background: rgba(20, 241, 217, 0.07);
+  background: var(--signal-wash);
 }
 
 .more-pill__icon {

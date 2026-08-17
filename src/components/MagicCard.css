@@ -16,7 +16,7 @@
   pointer-events: none;
   background: radial-gradient(
     340px circle at var(--mx, 50%) var(--my, 0%),
-    rgba(20, 241, 217, 0.16),
+    var(--signal-wash),
     transparent 65%
   );
   transition: opacity 0.3s ease;
@@ -29,6 +29,6 @@
 
 @media (prefers-reduced-motion: reduce) {
   .magic-card__glow {
-    background: radial-gradient(340px circle at 50% 0%, rgba(20, 241, 217, 0.1), transparent 65%);
+    background: radial-gradient(340px circle at 50% 0%, var(--signal-wash), transparent 65%);
   }
 }

@@ -107,7 +107,7 @@
 @media (hover: none) {
   .timeline-block:hover .timeline-content {
     transform: none;
-    border-color: rgba(20, 241, 217, 0.08);
+    border-color: var(--signal-wash);
   }
 
   .timeline-block:hover .timeline-dot {

@@ -46,7 +46,7 @@
   padding: 5px 12px;
   border-radius: 999px;
   border: 1px solid var(--color-terminal-dim);
-  background: rgba(20, 241, 217, 0.05);
+  background: var(--signal-wash);
 }
 
 .research-entry__title {
@@ -70,7 +70,7 @@
   border: 1px solid var(--color-primary-dim);
   border-left: 2px solid var(--color-primary);
   border-radius: 0 8px 8px 0;
-  background: rgba(168, 85, 247, 0.05);
+  background: var(--signal-wash);
   overflow-x: auto;
 }
 
@@ -142,9 +142,9 @@
   flex-shrink: 0;
 }
 
-.verdict--pass .verdict__flag { color: #14f1d9; }
-.verdict--mixed .verdict__flag { color: #e5c07b; }
-.verdict--fail .verdict__flag { color: #e06c75; }
+.verdict--pass .verdict__flag { color: var(--verdict-pass); }
+.verdict--mixed .verdict__flag { color: var(--verdict-mixed); }
+.verdict--fail .verdict__flag { color: var(--verdict-fail); }
 
 /* ---- foot ----------------------------------------------------------- */
 .research-entry__foot {

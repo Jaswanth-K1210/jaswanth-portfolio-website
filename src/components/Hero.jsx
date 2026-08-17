@@ -123,7 +123,12 @@ export default function Hero() {
           <div className="hero-scrim" aria-hidden="true" />
 
         <div className="hero-copy container">
-          <p className="hero-eyebrow text-mono">{profile.name}</p>
+          <p
+            className={`hero-wordmark${usingVoxel ? '' : ' is-fallback'}`}
+            style={{ backgroundImage: `url(${baseSrc})` }}
+          >
+            {profile.name}
+          </p>
 
           <WordReveal
             text={profile.headline}

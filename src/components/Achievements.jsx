@@ -6,7 +6,8 @@ import { achievements } from '../data';
 
 export default function Achievements() {
   return (
-    <section className="section container" id="achievements">
+    <section className="section plate-invert" id="achievements">
+      <div className="container">
       <h2 className="section-glow-title">Milestones</h2>
 
       <div className="achievements-layout glass-panel">
@@ -24,6 +25,7 @@ export default function Achievements() {
             </div>
           ))}
         </div>
+      </div>
       </div>
     </section>
   );

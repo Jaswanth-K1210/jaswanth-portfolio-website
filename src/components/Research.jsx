@@ -6,7 +6,8 @@ import { research, getProject } from '../data';
 
 export default function Research() {
   return (
-    <section className="section container" id="research">
+    <section className="section plate-invert" id="research">
+      <div className="container">
       <h2 className="section-glow-title">Research</h2>
 
       <div className="research-stack">
@@ -77,6 +78,7 @@ export default function Research() {
             </article>
           );
         })}
+      </div>
       </div>
     </section>
   );

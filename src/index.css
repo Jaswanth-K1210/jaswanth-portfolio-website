@@ -1,33 +1,133 @@
-@import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,100..900&family=Martian+Mono:wdth,wght@75..112.5,100..800&family=Newsreader:opsz,wght@6..72,200..800&display=swap');
+
+/* ==========================================================================
+   SPEC PLATE — the portfolio as an engineering datasheet.
+
+   Two rules govern everything below:
+   1. ONE accent (--signal). It means interactive or verified, nothing else.
+      Verdict colours (pass / mixed / fail) are SEMANTIC and deliberately kept
+      out of the accent's job, because they already carry meaning in the
+      research table and must not read as "clickable".
+   2. One token set. The light world is the same tokens re-declared under
+      .plate-invert, never a second stylesheet.
+   ========================================================================== */
 
 :root {
-  --bg-deep: #060913;
-  --bg-card: rgba(13, 18, 30, 0.6);
+  /* ---- palette --------------------------------------------------------- */
+  --ink: #15171b;        /* ground — warm graphite, not blue-black */
+  --plate: #1d2025;      /* raised surfaces */
+  --vellum: #d7dce2;     /* inverted band — cool drafting stock, not cream */
+  --rule: #373c44;       /* hairlines and plate edges */
+  --signal: #2e5bff;     /* the only accent */
+  --dim: #878d96;        /* secondary text */
 
-  --color-primary: #a855f7;
-  --color-primary-dim: rgba(168, 85, 247, 0.15);
+  --paper: #eef1f4;      /* brightest text on ink */
+  --signal-wash: rgb(46 91 255 / 12%);
+  --rule-soft: rgb(255 255 255 / 7%);
 
-  --color-terminal: #14f1d9;
-  --color-terminal-dim: rgba(20, 241, 217, 0.15);
-  --color-accent: #8b5cf6;
+  /* Semantic, not accent. Only ever used for verdict outcomes. */
+  --verdict-pass: #4ec9a5;
+  --verdict-mixed: #d7a13b;
+  --verdict-fail: #e0655f;
 
-  --text-main: #94a3b8;
-  --text-muted: #64748b;
-  --text-bright: #f1f5f9;
+  /* ---- legacy aliases --------------------------------------------------
+     Components still reference the old names. Repointing them here keeps
+     the redesign to one token set instead of touching every rule. */
+  --bg-deep: var(--ink);
+  --bg-card: var(--plate);
+  --color-primary: var(--signal);
+  --color-primary-dim: var(--signal-wash);
+  --color-terminal: var(--signal);
+  --color-terminal-dim: var(--signal-wash);
+  --color-accent: var(--signal);
+  --text-main: #b3b9c1;
+  --text-muted: var(--dim);
+  --text-bright: var(--paper);
+  --border-subtle: 1px solid var(--rule);
 
-  --font-heading: 'Space Grotesk', sans-serif;
-  --font-mono: 'JetBrains Mono', monospace;
-  --font-body: 'Inter', sans-serif;
+  /* ---- type ------------------------------------------------------------
+     Archivo carries display at expanded widths; Newsreader carries prose,
+     because the honesty blocks are editorial writing; Martian Mono carries
+     every label, metric and stamp. */
+  --font-heading: 'Archivo', 'Helvetica Neue', sans-serif;
+  --font-body: 'Newsreader', Georgia, serif;
+  --font-mono: 'Martian Mono', ui-monospace, monospace;
 
-  --border-subtle: 1px solid rgba(20, 241, 217, 0.15);
+  --wd-display: 118;     /* Archivo width axis for headings */
+  --wd-mono: 90;         /* Martian Mono runs narrow so labels stay compact */
 
-  --transition-smooth: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  /* ---- scale ------------------------------------------------------------ */
+  --t-display: clamp(2.4rem, 7vw, 5rem);
+  --t-h2: clamp(1.35rem, 3vw, 2.1rem);
+  --t-h3: clamp(1.05rem, 2vw, 1.35rem);
+  --t-body: clamp(0.98rem, 1.2vw, 1.06rem);
+  --t-small: 0.875rem;
+  --t-label: 0.66rem;
 
-  /* Fluid spacing scale */
-  --space-section: clamp(3rem, 6vw, 6rem);
-  --space-container: clamp(1rem, 4vw, 2rem);
+  /* ---- spacing — 4px base ---------------------------------------------- */
+  --s-1: 0.25rem;
+  --s-2: 0.5rem;
+  --s-3: 0.75rem;
+  --s-4: 1rem;
+  --s-6: 1.5rem;
+  --s-8: 2rem;
+  --s-12: 3rem;
+  --s-16: 4rem;
+
+  --space-section: clamp(4rem, 9vw, 8rem);
+  --space-container: clamp(1.25rem, 4vw, 2.5rem);
+
+  /* ---- form ------------------------------------------------------------ */
+  --r-sm: 2px;           /* plates are cut, not rounded */
+  --r-md: 4px;
+  --shadow-plate: 0 1px 0 var(--rule-soft), 0 18px 40px -24px rgb(0 0 0 / 80%);
+
+  /* ---- motion ----------------------------------------------------------- */
+  --ease: cubic-bezier(0.2, 0, 0, 1);
+  --dur-fast: 140ms;
+  --dur: 260ms;
+  --dur-slow: 520ms;
+  --transition-smooth: all var(--dur) var(--ease);
 }
 
+/* --------------------------------------------------------------------------
+   THE INVERSION — same tokens, restated. Applied to whole sections so the
+   page reads as graphite instrument panel, then printed datasheet, and back.
+   -------------------------------------------------------------------------- */
+.plate-invert {
+  --ink: #d7dce2;
+  --plate: #e7eaee;
+  --rule: #a8b0ba;
+  --rule-soft: rgb(21 23 27 / 12%);
+  --signal: #1b3ecc;          /* darkened to hold ~6.5:1 on vellum */
+  --signal-wash: rgb(27 62 204 / 10%);
+  --dim: #4d545e;
+  --paper: #15171b;
+
+  --verdict-pass: #14795e;
+  --verdict-mixed: #8a5a00;
+  --verdict-fail: #b0342e;
+
+  --bg-deep: var(--ink);
+  --bg-card: var(--plate);
+  --color-primary: var(--signal);
+  --color-primary-dim: var(--signal-wash);
+  --color-terminal: var(--signal);
+  --color-terminal-dim: var(--signal-wash);
+  --color-accent: var(--signal);
+  --text-main: #23272e;
+  --text-muted: var(--dim);
+  --text-bright: var(--paper);
+  --border-subtle: 1px solid var(--rule);
+  --shadow-plate: 0 1px 0 rgb(255 255 255 / 60%), 0 16px 32px -26px rgb(21 23 27 / 45%);
+
+  background: var(--ink);
+  color: var(--text-main);
+}
+
+/* --------------------------------------------------------------------------
+   BASE
+   -------------------------------------------------------------------------- */
 *,
 *::before,
 *::after {
@@ -43,17 +143,20 @@ body {
      pins the document to the viewport, so anything below the fold overflows
      and the page cannot scroll at all. */
   min-height: 100%;
-  background: radial-gradient(circle at 50% 0%, rgba(20, 241, 217, 0.06) 0%, var(--bg-deep) 60%),
-              linear-gradient(rgba(255, 255, 255, 0.015) 1px, transparent 1px),
-              linear-gradient(90deg, rgba(255, 255, 255, 0.015) 1px, transparent 1px);
-  background-size: 100% 100%, 40px 40px, 40px 40px;
+  /* A faint drafting grid, not a glow. Two hairline rules on a flat ground. */
+  background:
+    linear-gradient(var(--rule-soft) 1px, transparent 1px),
+    linear-gradient(90deg, var(--rule-soft) 1px, transparent 1px);
+  background-size: 72px 72px, 72px 72px;
   /* Must come AFTER the `background` shorthand — the shorthand resets
      background-color to transparent, which leaves uncovered areas white
      once the document grows taller than the viewport. */
-  background-color: var(--bg-deep);
+  background-color: var(--ink);
   background-attachment: fixed;
   color: var(--text-main);
   font-family: var(--font-body);
+  font-size: var(--t-body);
+  line-height: 1.7;
   scroll-behavior: smooth;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
@@ -70,38 +173,46 @@ html {
   overscroll-behavior-y: none;
 }
 
-.text-mono {
-  font-family: var(--font-mono);
-}
-
-.text-muted {
-  color: var(--text-muted);
-}
-
-.text-primary {
-  color: var(--color-primary);
-}
-
-.text-bright {
+h1, h2, h3, h4, h5, h6 {
+  font-family: var(--font-heading);
+  font-variation-settings: 'wdth' var(--wd-display);
+  font-weight: 700;
+  letter-spacing: -0.025em;
+  line-height: 1.05;
+  text-wrap: balance;
   color: var(--text-bright);
 }
 
-.text-accent {
-  color: var(--color-accent);
+p { text-wrap: pretty; }
+
+a {
+  text-decoration: none;
+  color: inherit;
+  transition: color var(--dur) var(--ease);
 }
 
-h1,
-h2,
-h3,
-h4,
-h5,
-h6 {
-  font-family: var(--font-heading);
-  letter-spacing: -0.02em;
+/* Real focus states, on every interactive element. */
+:focus-visible {
+  outline: 2px solid var(--signal);
+  outline-offset: 3px;
+  border-radius: var(--r-sm);
 }
+
+/* --------------------------------------------------------------------------
+   UTILITIES
+   -------------------------------------------------------------------------- */
+.text-mono {
+  font-family: var(--font-mono);
+  font-variation-settings: 'wdth' var(--wd-mono);
+}
+
+.text-muted { color: var(--text-muted); }
+.text-primary { color: var(--color-primary); }
+.text-bright { color: var(--text-bright); }
+.text-accent { color: var(--color-accent); }
 
 .container {
-  max-width: 1200px;
+  max-width: 1240px;
   margin: 0 auto;
   padding: 0 var(--space-container);
   position: relative;
@@ -115,171 +226,157 @@ h6 {
   scroll-margin-top: 7rem;
 }
 
-/* Section Titles */
+/* Inverted sections run full-bleed, so the band reaches both edges while
+   the content column stays put. */
+.plate-invert.section {
+  padding-inline: 0;
+}
+
+/* --------------------------------------------------------------------------
+   SECTION TITLES — index numeral + rule. The numeral is the section's real
+   position in the document, set by a counter, not a decorative flourish.
+   -------------------------------------------------------------------------- */
+body { counter-reset: plate; }
+
+.section-glow-title,
+.section-header-terminal {
+  counter-increment: plate;
+}
+
 .section-glow-title {
-  font-family: var(--font-mono);
-  font-size: clamp(1.4rem, 3.5vw, 2.2rem);
-  font-weight: 600;
-  text-align: left;
-  margin-bottom: clamp(2rem, 4vw, 3.5rem);
-  letter-spacing: -0.5px;
-  background: linear-gradient(135deg, #14f1d9, #3b82f6);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
-  display: flex;
-  align-items: center;
-  border-bottom: 1px solid rgba(20, 241, 217, 0.12);
-  padding-bottom: 0.75rem;
+  font-family: var(--font-heading);
+  font-variation-settings: 'wdth' var(--wd-display);
+  font-size: var(--t-h2);
+  font-weight: 700;
+  letter-spacing: -0.02em;
   text-transform: uppercase;
+  color: var(--text-bright);
+  display: flex;
+  align-items: baseline;
+  gap: var(--s-4);
+  margin-bottom: clamp(2rem, 4vw, 3.5rem);
+  padding-bottom: var(--s-3);
+  border-bottom: 1px solid var(--rule);
   position: relative;
 }
 
 .section-glow-title::before {
-  content: "~# ";
-  color: #64748b;
-  font-size: clamp(0.8rem, 1.5vw, 1.2rem);
+  content: counter(plate, decimal-leading-zero);
+  font-family: var(--font-mono);
+  font-variation-settings: 'wdth' var(--wd-mono);
+  font-size: var(--t-label);
   font-weight: 500;
-  margin-right: 10px;
-  -webkit-text-fill-color: initial;
+  letter-spacing: 0.12em;
+  color: var(--signal);
   flex-shrink: 0;
 }
 
-.section-glow-title::after {
-  content: "█";
-  margin-left: 10px;
-  color: var(--color-terminal);
-  animation: terminal-blink 1s step-end infinite;
-  -webkit-text-fill-color: initial;
-  font-size: 0.8em;
-}
-
-@keyframes terminal-blink {
-  0%, 100% { opacity: 1; }
-  50% { opacity: 0; }
-}
-
-/* Base Card Style */
-.glass-panel {
-  background: linear-gradient(145deg, rgba(20, 25, 40, 0.5), rgba(10, 15, 25, 0.7));
-  border: 1px solid rgba(20, 241, 217, 0.08);
-  border-radius: 16px;
-  backdrop-filter: blur(20px);
-  -webkit-backdrop-filter: blur(20px);
-  position: relative;
-  transition: all 0.5s cubic-bezier(0.16, 1, 0.3, 1);
-  box-shadow:
-    0 4px 24px -6px rgba(0, 0, 0, 0.6),
-    inset 0 1px 0 rgba(255, 255, 255, 0.04);
-  transform: translateZ(0);
-  will-change: transform, box-shadow;
-}
-
-.glass-panel:hover {
-  transform: translateY(-3px);
-  border-color: rgba(20, 241, 217, 0.25);
-  box-shadow:
-    0 20px 40px -8px rgba(0, 0, 0, 0.6),
-    0 0 30px rgba(20, 241, 217, 0.08),
-    inset 0 1px 0 rgba(255, 255, 255, 0.08);
-}
-
-/* Pill Tags */
-.pill-tag {
-  background: rgba(20, 241, 217, 0.04);
-  border: 1px solid rgba(20, 241, 217, 0.15);
-  color: var(--color-terminal);
-  border-radius: 6px;
-  padding: 5px 12px;
-  font-family: var(--font-mono);
-  font-size: 0.72rem;
-  display: inline-flex;
-  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
-  text-transform: uppercase;
-  letter-spacing: 0.3px;
-}
-
-.pill-tag:hover {
-  background: rgba(20, 241, 217, 0.12);
-  border-color: rgba(20, 241, 217, 0.4);
-  color: #fff;
-  transform: translateY(-1px);
-  box-shadow: 0 4px 12px rgba(20, 241, 217, 0.15);
-}
-
-/* Terminal Section Headers */
 .section-header-terminal {
-  font-family: var(--font-mono);
-  color: var(--color-terminal);
-  border-bottom: 1px solid rgba(20, 241, 217, 0.12);
-  padding-bottom: 1rem;
+  font-family: var(--font-heading);
+  color: var(--text-bright);
+  border-bottom: 1px solid var(--rule);
+  padding-bottom: var(--s-4);
   margin-bottom: clamp(2rem, 4vw, 3rem);
   display: flex;
   justify-content: space-between;
   align-items: flex-end;
   flex-wrap: wrap;
-  gap: 0.5rem;
+  gap: var(--s-2);
 }
 
 .section-header-terminal h2 {
-  font-size: clamp(1rem, 2vw, 1.5rem);
+  font-size: var(--t-h2);
+  text-transform: uppercase;
   display: flex;
   align-items: center;
-  gap: 12px;
+  gap: var(--s-3);
   margin: 0;
-  letter-spacing: 1px;
+  letter-spacing: -0.02em;
 }
+
+.section-header-terminal h2 svg { color: var(--signal); }
 
 .section-stats {
   font-family: var(--font-mono);
-  font-size: 0.85rem;
-  letter-spacing: 1px;
+  font-variation-settings: 'wdth' var(--wd-mono);
+  font-size: var(--t-label);
+  letter-spacing: 0.12em;
   color: var(--text-muted) !important;
 }
 
-.blink {
-  animation: terminal-blink 1s step-end infinite;
-  color: var(--color-terminal);
+/* --------------------------------------------------------------------------
+   PLATES — flat, cut, one hairline top edge. No blur, no glow.
+   -------------------------------------------------------------------------- */
+.glass-panel {
+  background: var(--plate);
+  border: 1px solid var(--rule);
+  border-top: 2px solid var(--rule);
+  border-radius: var(--r-md);
+  position: relative;
+  box-shadow: var(--shadow-plate);
+  transition: border-top-color var(--dur) var(--ease), transform var(--dur) var(--ease);
 }
 
-a {
-  text-decoration: none;
-  color: inherit;
-  transition: var(--transition-smooth);
+.glass-panel:hover {
+  transform: translateY(-2px);
+  border-top-color: var(--signal);
 }
 
-::-webkit-scrollbar {
-  width: 6px;
+/* --------------------------------------------------------------------------
+   TAGS — square, quiet, mono. They are metadata, not buttons.
+   -------------------------------------------------------------------------- */
+.pill-tag {
+  background: transparent;
+  border: 1px solid var(--rule);
+  color: var(--text-muted);
+  border-radius: var(--r-sm);
+  padding: 4px 9px;
+  font-family: var(--font-mono);
+  font-variation-settings: 'wdth' var(--wd-mono);
+  font-size: var(--t-label);
+  display: inline-flex;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  transition: color var(--dur) var(--ease), border-color var(--dur) var(--ease);
 }
 
-::-webkit-scrollbar-track {
-  background: var(--bg-deep);
+.pill-tag:hover {
+  color: var(--text-bright);
+  border-color: var(--signal);
 }
 
+.blink { color: var(--signal); }
+
+/* --------------------------------------------------------------------------
+   SCROLLBAR
+   -------------------------------------------------------------------------- */
+::-webkit-scrollbar { width: 10px; }
+::-webkit-scrollbar-track { background: var(--ink); }
 ::-webkit-scrollbar-thumb {
-  background: rgba(20, 241, 217, 0.2);
-  border-radius: 4px;
+  background: var(--rule);
+  border: 3px solid var(--ink);
+  border-radius: 999px;
 }
+::-webkit-scrollbar-thumb:hover { background: var(--signal); }
 
-::-webkit-scrollbar-thumb:hover {
-  background: rgba(20, 241, 217, 0.4);
-}
-
-/* Disable hover effects on touch devices for cleaner mobile experience */
 @media (hover: none) {
   .glass-panel:hover {
     transform: none;
-    border-color: rgba(20, 241, 217, 0.08);
-    box-shadow:
-      0 4px 24px -6px rgba(0, 0, 0, 0.6),
-      inset 0 1px 0 rgba(255, 255, 255, 0.04);
+    border-top-color: var(--rule);
   }
-
   .pill-tag:hover {
-    transform: none;
-    background: rgba(20, 241, 217, 0.04);
-    border-color: rgba(20, 241, 217, 0.15);
-    color: var(--color-terminal);
-    box-shadow: none;
+    color: var(--text-muted);
+    border-color: var(--rule);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
   }
 }
