@@ -47,6 +47,24 @@ export const links = {
 };
 
 // ---------------------------------------------------------------------------
+// ASSETS
+// Decorative imagery for the voxel build. Every one of these is optional:
+// components check `hasAsset()` and fall back cleanly when a file is absent,
+// so the site never renders a broken image or an empty frame.
+// Drop the PNGs into /public with these exact names to switch them on.
+// ---------------------------------------------------------------------------
+export const assets = {
+  avatarBase: "/transparent-base.png",   // voxel avatar, no flame
+  avatarFlame: "/transparent-flame.png", // voxel avatar, blue flame (spotlight reveal)
+  avatarFallback: "/Profile.jpg",        // used until the voxel art exists
+  portal: "/nether-portal-nobg.png",     // marquee end frames
+  book: "/enchantedbook.png",            // Featured Projects heading accent
+  llama: "/llama-nobg.png",              // perches on the closing CTA card
+  nightSky: "/night-sky.png",            // parallax CTA background
+  cloud: "/cloud.png",                   // floating parallax accents
+};
+
+// ---------------------------------------------------------------------------
 // ROLE LENSES
 // Drives the SDE/SWE vs AI/ML toggle. Projects and skills declare which
 // lenses they belong to; the toggle filters and reorders by `order`.

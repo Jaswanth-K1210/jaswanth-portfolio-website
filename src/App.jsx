@@ -2,6 +2,7 @@ import React from 'react';
 import './App.css';
 import NetworkBackground from './components/NetworkBackground';
 import Hero from './components/Hero';
+import Marquee from './components/Marquee';
 import About from './components/About';
 import Projects from './components/Projects';
 import Research from './components/Research';
@@ -13,18 +14,20 @@ import Contact from './components/Contact';
 function App() {
   return (
     <>
-      {/* 3D Global Scene */}
       <NetworkBackground />
 
-      {/* Scrollable Content */}
       <div className="app-content">
         <Hero />
-        <About />
-        <Projects />
-        <Research />
-        <Achievements />
-        <Skills />
-        <Roadmap />
+        <Marquee direction="left" />
+        <main id="main">
+          <About />
+          <Projects />
+          <Marquee direction="right" />
+          <Research />
+          <Skills />
+          <Roadmap />
+          <Achievements />
+        </main>
         <Contact />
       </div>
     </>

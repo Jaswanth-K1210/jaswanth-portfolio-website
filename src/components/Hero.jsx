@@ -1,142 +1,174 @@
-import React from 'react';
+import React, { useEffect, useRef } from 'react';
 
-import { Github, FileText, Bot, Linkedin, Mail, Activity, Boxes, Code } from 'lucide-react';
+import { Github, Linkedin, Code, Boxes, ArrowRight } from 'lucide-react';
 import './Hero.css';
-import { profile, links, projects } from '../data';
+import { profile, links, assets } from '../data';
+import { useImageStatus, useImagesSettled, usePrefersReducedMotion } from '../lib/useAsset';
 
-/* Ring 1 = profile links. Anything empty in data.js is simply not rendered. */
-const profileNodes = [
-  { href: links.linkedin, label: 'LinkedIn Profile', Icon: Linkedin },
-  { href: links.github, label: 'GitHub Profile', Icon: Github },
-  { href: links.leetcode, label: 'LeetCode Profile', Icon: Code },
-  { href: links.huggingface, label: 'HuggingFace Profile', Icon: Boxes },
-].filter((n) => n.href);
+const navLinks = [
+  { href: '#about', label: 'About' },
+  { href: '#projects', label: 'Projects' },
+  { href: '#research', label: 'Research' },
+  { href: '#skills', label: 'Skills' },
+];
 
-/* Ring 2 = the first two projects that expose a live URL. */
-const liveNodes = projects
-  .flatMap((p) => p.links.filter((l) => l.kind === 'live').map((l) => ({ ...l, title: p.title })))
-  .slice(0, 2)
-  .map((l, i) => ({ href: l.href, label: `${l.title} Live`, Icon: i === 0 ? Mail : Activity }));
+const socialLinks = [
+  { href: links.github, label: 'GitHub', Icon: Github },
+  { href: links.linkedin, label: 'LinkedIn', Icon: Linkedin },
+  { href: links.leetcode, label: 'LeetCode', Icon: Code },
+  { href: links.huggingface, label: 'HuggingFace', Icon: Boxes },
+].filter((l) => l.href);
 
-/* Both orbit animations run on a 20s cycle; spread nodes evenly around it
-   so the ring stays balanced whatever number of links data.js provides. */
-const ORBIT_PERIOD = 20;
-const delayFor = (i, total) => `${-(ORBIT_PERIOD / total) * i}s`;
-
-const firstName = profile.name.split(' ')[0];
+/** Splits the headline into spans so each word can cascade in on mount. */
+function WordReveal({ text, className, delayStep = 0.05, disabled }) {
+  return (
+    <h1 className={className}>
+      {text.split(' ').map((word, i) => (
+        <span
+          key={`${word}-${i}`}
+          className={disabled ? undefined : 'word-reveal'}
+          style={disabled ? undefined : { animationDelay: `${i * delayStep}s` }}
+        >
+          {word}
+          {' '}
+        </span>
+      ))}
+    </h1>
+  );
+}
 
 export default function Hero() {
+  const flameRef = useRef(null);
+  const reducedMotion = usePrefersReducedMotion();
+
+  const baseStatus = useImageStatus(assets.avatarBase);
+  const flameStatus = useImageStatus(assets.avatarFlame);
+  const settled = useImagesSettled([assets.avatarBase, assets.avatarFlame, assets.avatarFallback]);
+
+  /* Until the voxel art exists, fall back to the real photo so the hero is
+     never empty. The flame layer simply does not render if its file is absent. */
+  const usingVoxel = baseStatus === 'ready';
+  const baseSrc = usingVoxel ? assets.avatarBase : assets.avatarFallback;
+  const showFlame = flameStatus === 'ready' && !reducedMotion;
+
+  useEffect(() => {
+    if (!showFlame) return undefined;
+    const el = flameRef.current;
+    if (!el) return undefined;
+
+    /* Spotlight starts centred, then eases toward the pointer each frame
+       rather than snapping to raw coordinates. */
+    let target = { x: window.innerWidth / 2, y: window.innerHeight / 2 };
+    let smooth = { ...target };
+    let frame;
+
+    const onMouse = (e) => { target = { x: e.clientX, y: e.clientY }; };
+    const onTouch = (e) => {
+      const t = e.touches?.[0];
+      if (t) target = { x: t.clientX, y: t.clientY };
+    };
+
+    const tick = () => {
+      smooth.x += (target.x - smooth.x) * 0.1;
+      smooth.y += (target.y - smooth.y) * 0.1;
+      const rect = el.getBoundingClientRect();
+      el.style.setProperty('--x', `${smooth.x - rect.left}px`);
+      el.style.setProperty('--y', `${smooth.y - rect.top}px`);
+      frame = requestAnimationFrame(tick);
+    };
+
+    window.addEventListener('mousemove', onMouse, { passive: true });
+    window.addEventListener('touchmove', onTouch, { passive: true });
+    window.addEventListener('touchstart', onTouch, { passive: true });
+    frame = requestAnimationFrame(tick);
+
+    return () => {
+      window.removeEventListener('mousemove', onMouse);
+      window.removeEventListener('touchmove', onTouch);
+      window.removeEventListener('touchstart', onTouch);
+      cancelAnimationFrame(frame);
+    };
+  }, [showFlame]);
+
   return (
     <section className="hero-viewport" id="home">
-
-      {/* Navbar integrated into Hero Section to match static placement in design */}
       <nav className="top-nav container">
         <div className="nav-logo">{profile.name}</div>
         <div className="nav-links text-mono text-muted">
-          <a href="#about">About</a>
-          <a href="#projects">Projects <span className="dot-decor"></span></a>
-          <a href="#research">Research</a>
-          <a href="#skills">Skills</a>
+          {navLinks.map((l) => (
+            <a href={l.href} key={l.href}>{l.label}</a>
+          ))}
         </div>
         <a href="#contact" className="btn-contact btn-purple">Contact Me</a>
       </nav>
 
-      {/* Hero Grid Structure */}
-      <div className="hero-grid container">
+      <div className={`hero-stage${settled ? ' is-loaded' : ''}`}>
+        {/* Skeleton holds the layout until both avatar layers have resolved. */}
+        {!settled && <div className="hero-skeleton" aria-hidden="true" />}
 
-        {/* Left Side: Glowing Title and Info */}
-        <div className="hero-left">
-          <h1 className="hero-glow-title">
-            Hi,<br />
-            I'm {firstName} <span style={{ display: 'inline-block' }} role="img" aria-label="wave">👋</span>
-          </h1>
+        <div className={`hero-avatar-layers${usingVoxel ? '' : ' is-fallback'}`} aria-hidden="true">
+          <div
+            className="hero-reveal-img hero-reveal-img--base"
+            style={{ backgroundImage: `url(${baseSrc})` }}
+          />
+          {showFlame && (
+            <div
+              ref={flameRef}
+              className="hero-reveal-img hero-reveal-img--flame"
+              style={{ backgroundImage: `url(${assets.avatarFlame})` }}
+            />
+          )}
+        </div>
 
-          <p className="hero-desc text-mono text-muted">
-            {profile.headline} {profile.subheadline}
+          <div className="hero-scrim" aria-hidden="true" />
+
+        <div className="hero-copy container">
+          <p className="hero-eyebrow text-mono">{profile.name}</p>
+
+          <WordReveal
+            text={profile.headline}
+            className="hero-headline"
+            disabled={reducedMotion}
+          />
+
+          <p className="hero-sub">{profile.subheadline}</p>
+
+          <p className="hero-status text-mono">
+            <span className="hero-status-dot" aria-hidden="true" />
+            {profile.status}
           </p>
 
-          <div className="hero-links text-mono text-muted">
-            {links.github && (
-              <a href={links.github} target="_blank" rel="noreferrer" className="link-item">
-                <Github size={18} /> Github Profile
-              </a>
-            )}
-            {links.linkedin && (
-              <a href={links.linkedin} target="_blank" rel="noreferrer" className="link-item">
-                <Linkedin size={18} /> LinkedIn Profile
-              </a>
-            )}
-            <a href="#research" className="link-item">
-              <FileText size={18} /> Read Research
+          <div className="hero-actions">
+            <a className="cta-button" href={profile.resumeUrl}>
+              <span className="cta-button__fill" aria-hidden="true" />
+              <span className="cta-button__label">View Résumé</span>
+              <span className="cta-button__icon" aria-hidden="true">
+                <ArrowRight size={16} />
+              </span>
             </a>
-          </div>
-        </div>
 
-        {/* Right Side: Circular Visualization and Cards */}
-        <div className="hero-right">
-          <div className="profile-visual-wrapper">
-
-            <div className="atom-system">
-              {/* Nucleus */}
-              <div className="center-nucleus">
-                <img
-                  src="/Profile.jpg"
-                  alt={profile.name}
-                  className="profile-img"
-                  style={{ objectPosition: ' center', transform: 'scale(1.9)', transformOrigin: ' center' }}
-                />
-              </div>
-
-              {/* Ring 1: profile links */}
-              <div className="orbit-ring ring-1">
-                {profileNodes.map((node, i) => {
-                  const delay = delayFor(i, profileNodes.length);
-                  const { Icon } = node;
-                  return (
-                    <div className="electron-wrapper" key={node.label} style={{ animationDelay: delay }}>
-                      <div className="electron-node node-1" style={{ animationDelay: delay }}>
-                        <a href={node.href} target="_blank" rel="noreferrer" className="satellite-content">
-                          <Icon size={20} color="#14f1d9" />
-                          <span className="node-tooltip">{node.label}</span>
-                        </a>
-                      </div>
-                    </div>
-                  );
-                })}
-              </div>
-
-              {/* Ring 2: live project deployments */}
-              <div className="orbit-ring ring-2">
-                {liveNodes.map((node, i) => {
-                  const delay = delayFor(i, liveNodes.length);
-                  const { Icon } = node;
-                  return (
-                    <div className="electron-wrapper" key={node.label} style={{ animationDelay: delay }}>
-                      <div className="electron-node node-2" style={{ animationDelay: delay }}>
-                        <a href={node.href} target="_blank" rel="noreferrer" className="satellite-content">
-                          <Icon size={20} color="#14f1d9" />
-                          <span className="node-tooltip">{node.label}</span>
-                        </a>
-                      </div>
-                    </div>
-                  );
-                })}
-              </div>
+            <div className="hero-socials text-mono">
+              {socialLinks.map((social) => {
+                const { Icon } = social;
+                return (
+                  <a
+                    key={social.label}
+                    href={social.href}
+                    target="_blank"
+                    rel="noreferrer"
+                    className="hero-social"
+                  >
+                    <Icon size={16} />
+                    {social.label}
+                  </a>
+                );
+              })}
             </div>
-
           </div>
         </div>
-
       </div>
 
-      {/* Decorative Blur Blobs mirroring layout */}
-      <div className="blur-blob blob-purple shape-1"></div>
-      <div className="blur-blob blob-purple shape-2"></div>
-
-      {/* Bottom Right Floating Chat Action Button */}
-      <a href="#contact" className="floating-chat-btn">
-        <Bot size={20} />
-      </a>
+      <div className="hero-bottom-fade" aria-hidden="true" />
     </section>
   );
 }

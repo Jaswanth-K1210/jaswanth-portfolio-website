@@ -1,81 +1,161 @@
-.contact-grid {
+/* ==========================================================================
+   Closing CTA — parallax night sky, mascot on a glass card, contact links.
+   ========================================================================== */
+
+.cta-section {
+  position: relative;
+  min-height: 100svh;
   display: grid;
-  grid-template-columns: 1fr 1fr;
-  padding: clamp(1.5rem, 4vw, 3rem);
-  gap: clamp(1.5rem, 4vw, 3rem);
+  place-items: center;
+  overflow: hidden;
+  background: #000;
+  isolation: isolate;
 }
 
-.contact-intel {
-  display: flex;
-  flex-direction: column;
+/* Oversized and offset upward so the parallax drift never exposes an edge. */
+.cta-sky {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: -40%;
+  height: 180%;
+  background-size: cover;
+  background-position: center;
+  z-index: 0;
 }
 
-.contact-links {
-  display: flex;
-  flex-direction: column;
-  gap: 0.75rem;
+.cta-sky--fallback {
+  background:
+    radial-gradient(1px 1px at 20% 30%, rgba(255, 255, 255, 0.7), transparent),
+    radial-gradient(1px 1px at 70% 18%, rgba(255, 255, 255, 0.55), transparent),
+    radial-gradient(1.5px 1.5px at 45% 55%, rgba(255, 255, 255, 0.6), transparent),
+    radial-gradient(1px 1px at 85% 70%, rgba(255, 255, 255, 0.5), transparent),
+    radial-gradient(circle at 50% 12%, rgba(20, 241, 217, 0.09), transparent 55%),
+    linear-gradient(to bottom, #060b18, #01030a);
 }
 
-.contact-btn {
-  display: flex;
-  align-items: center;
+.cta-top-fade {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 0;
+  height: 26vh;
+  background: linear-gradient(to bottom, var(--bg-deep), transparent);
+  z-index: 1;
+  pointer-events: none;
+}
+
+.cta-inner {
+  position: relative;
+  z-index: 2;
   width: 100%;
-  padding: 1.1rem 1.5rem;
-  background: rgba(0, 229, 255, 0.03);
-  border: 1px solid rgba(0, 229, 255, 0.12);
-  border-radius: 12px;
-  color: var(--color-primary);
-  text-decoration: none;
-  font-size: 0.85rem;
-  transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2.5rem;
+  padding-block: clamp(5rem, 12vh, 8rem);
 }
 
-.contact-btn:hover {
-  background: rgba(0, 229, 255, 0.06);
-  border-color: rgba(168, 85, 247, 0.3);
-  transform: translateX(6px);
+/* ---- mascot sits on the card's top edge -------------------------------- */
+.cta-mascot {
+  position: absolute;
+  top: clamp(1rem, 4vh, 3rem);
+  left: 50%;
+  transform: translate(-50%, -55%);
+  width: clamp(96px, 15vw, 168px);
+  height: auto;
+  z-index: 3;
+  pointer-events: none;
+  filter: drop-shadow(0 18px 26px rgba(0, 0, 0, 0.55));
 }
 
-.footer-bottom {
+.cta-card {
+  width: min(100%, 660px);
+}
+
+.cta-card.has-mascot .cta-card__content {
+  padding-top: clamp(3.5rem, 8vw, 5rem);
+}
+
+.cta-card__content {
+  padding: clamp(2rem, 5vw, 3rem);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1rem;
   text-align: center;
-  padding-top: 2rem;
-  font-size: 0.78rem;
-  opacity: 0.7;
 }
 
-.mr-3 {
-  margin-right: 12px;
+.cta-eyebrow {
+  font-size: 0.68rem;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--color-terminal);
 }
 
-.ml-auto {
-  margin-left: auto;
+.cta-heading {
+  font-size: clamp(1.5rem, 4vw, 2.4rem);
+  line-height: 1.2;
+  letter-spacing: -0.02em;
+  color: var(--text-bright);
+  text-wrap: balance;
 }
 
-.mt-5 {
-  margin-top: 2rem;
+.cta-body {
+  font-size: 0.92rem;
+  line-height: 1.7;
+  max-width: 46ch;
 }
 
-.mb-2 {
-  margin-bottom: 0.5rem;
+/* ---- links ------------------------------------------------------------- */
+.cta-links {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: center;
+  gap: 0.65rem 0.9rem;
+  margin-top: 0.75rem;
+  font-size: 0.82rem;
 }
 
-@media (max-width: 768px) {
-  .contact-grid {
-    grid-template-columns: 1fr;
+.cta-link {
+  color: var(--text-bright);
+  text-decoration: none;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+  padding-bottom: 2px;
+  transition: color 0.25s ease, border-color 0.25s ease;
+}
+
+.cta-link:hover,
+.cta-link:focus-visible {
+  color: var(--color-terminal);
+  border-color: var(--color-terminal);
+}
+
+.cta-dot {
+  color: var(--text-muted);
+  font-size: 0.6em;
+}
+
+.cta-colophon {
+  font-size: 0.7rem;
+  letter-spacing: 0.1em;
+}
+
+/* ---- responsive -------------------------------------------------------- */
+@media (max-width: 560px) {
+  /* Let the last link drop to its own centred row rather than wrap mid-row. */
+  .cta-links {
+    max-width: 22rem;
+  }
+
+  .cta-mascot {
+    transform: translate(-50%, -50%);
   }
 }
 
-@media (max-width: 480px) {
-  .contact-btn {
-    padding: 0.9rem 1.1rem;
-    font-size: 0.8rem;
-  }
-}
-
-@media (hover: none) {
-  .contact-btn:hover {
-    transform: none;
-    background: rgba(0, 229, 255, 0.03);
-    border-color: rgba(0, 229, 255, 0.12);
+@media (prefers-reduced-motion: reduce) {
+  .cta-sky {
+    transform: none !important;
   }
 }
