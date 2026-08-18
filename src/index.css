@@ -220,6 +220,10 @@ a {
 }
 
 .section {
+  /* Skip layout and paint for sections well off-screen. contain-intrinsic-size
+     keeps the scrollbar stable so this never causes scroll jumping. */
+  content-visibility: auto;
+  contain-intrinsic-size: auto 900px;
   padding: var(--space-section) 0;
   /* The navbar is position: fixed, so anchor jumps would otherwise land with
      the section heading hidden underneath it. */

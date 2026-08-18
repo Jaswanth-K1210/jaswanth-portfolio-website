@@ -17,21 +17,12 @@ const STATUS_LABEL = {
 const featured = getFeatured();
 const rest = projects.filter((p) => !p.featured);
 
-function ProjectCard({ proj, index, breathe }) {
+function ProjectCard({ proj }) {
   const repo = proj.links.find((l) => l.kind === 'repo');
   const live = proj.links.find((l) => l.kind === 'live');
 
   return (
-    <Motion.article
-      className="proj-card glass-panel"
-      animate={breathe ? { y: [0, -6, 0], scale: [1, 1.008, 1] } : undefined}
-      transition={breathe ? {
-        duration: 6,
-        repeat: Infinity,
-        ease: 'easeInOut',
-        delay: (index % 4) * 0.6,
-      } : undefined}
-    >
+    <article className="proj-card glass-panel">
       <div className="proj-content">
         <div className="proj-head">
           <h3 className="proj-title">{proj.title}</h3>
@@ -75,7 +66,7 @@ function ProjectCard({ proj, index, breathe }) {
           </div>
         </div>
       </div>
-    </Motion.article>
+    </article>
   );
 }
 
@@ -120,8 +111,8 @@ export default function Projects() {
       </header>
 
       <div className="proj-grid">
-        {featured.map((proj, i) => (
-          <ProjectCard key={proj.slug} proj={proj} index={i} breathe={!reducedMotion} />
+        {featured.map((proj) => (
+          <ProjectCard key={proj.slug} proj={proj} />
         ))}
 
         <AnimatePresence>
@@ -133,7 +124,7 @@ export default function Projects() {
               exit={{ opacity: 0, y: 16, filter: 'blur(6px)' }}
               transition={{ duration: 0.4, delay: reducedMotion ? 0 : i * 0.06, ease: 'easeOut' }}
             >
-              <ProjectCard proj={proj} index={i + featured.length} breathe={!reducedMotion} />
+              <ProjectCard proj={proj} />
             </Motion.div>
           ))}
         </AnimatePresence>
