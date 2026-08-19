@@ -242,8 +242,10 @@ a {
    -------------------------------------------------------------------------- */
 body { counter-reset: plate; }
 
-.section-glow-title,
-.section-header-terminal {
+/* The increment lives on the section box, not on the title. Titles sit inside
+   the content-visibility: auto subtree, and skipped contents do not increment
+   counters — which made the numerals depend on how far you had scrolled. */
+.section {
   counter-increment: plate;
 }
 

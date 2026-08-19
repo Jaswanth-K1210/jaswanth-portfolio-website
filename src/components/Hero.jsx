@@ -5,13 +5,6 @@ import './Hero.css';
 import { profile, links, projects, assets } from '../data';
 import { usePrefersReducedMotion } from '../lib/useAsset';
 
-const navLinks = [
-  { href: '#about', label: 'About' },
-  { href: '#projects', label: 'Projects' },
-  { href: '#research', label: 'Research' },
-  { href: '#skills', label: 'Skills' },
-];
-
 const socialLinks = [
   { href: links.github, label: 'GitHub', Icon: Github },
   { href: links.linkedin, label: 'LinkedIn', Icon: Linkedin },
@@ -83,13 +76,6 @@ export default function Hero() {
 
   return (
     <section className="hero-viewport" id="home">
-      <nav className="top-nav container">
-        <div className="nav-logo">{profile.name}</div>
-        <div className="nav-links text-mono text-muted">
-          {navLinks.map((l) => <a href={l.href} key={l.href}>{l.label}</a>)}
-        </div>
-        <a href="#contact" className="btn-contact btn-purple">Contact Me</a>
-      </nav>
 
       <div className="hero-stage">
         <div className="hero-copy container">
