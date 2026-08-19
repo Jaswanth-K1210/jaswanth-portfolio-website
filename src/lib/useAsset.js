@@ -86,3 +86,22 @@ export function usePrefersReducedMotion() {
 
   return reduced;
 }
+
+/** True while the element is intersecting the viewport. Used to park
+ *  continuous animations whenever they are not actually on screen. */
+export function useInViewport(ref, rootMargin = '200px') {
+  const [inView, setInView] = useState(false);
+
+  useEffect(() => {
+    const el = ref.current;
+    if (!el || typeof IntersectionObserver === 'undefined') return undefined;
+    const io = new IntersectionObserver(
+      ([entry]) => setInView(entry.isIntersecting),
+      { rootMargin },
+    );
+    io.observe(el);
+    return () => io.disconnect();
+  }, [ref, rootMargin]);
+
+  return inView;
+}

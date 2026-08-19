@@ -1,6 +1,7 @@
 import React from 'react';
 import './App.css';
 import Hero from './components/Hero';
+import Marquee from './components/Marquee';
 import About from './components/About';
 import Projects from './components/Projects';
 import Research from './components/Research';
@@ -13,9 +14,11 @@ function App() {
   return (
     <div className="app-content">
       <Hero />
+      <Marquee direction="left" />
       <main id="main">
         <About />
         <Projects />
+        <Marquee direction="right" />
         <Research />
         <Skills />
         <Roadmap />

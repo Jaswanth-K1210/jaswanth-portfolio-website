@@ -1,7 +1,5 @@
 /* ==========================================================================
-   Hero — voxel avatar with a mouse-following spotlight reveal.
-   Two stacked avatar layers: the base is always visible, the flame layer is
-   masked to a soft circle that eases toward the cursor.
+   Hero — two-weight wordmark, editorial copy column, orbiting nucleus.
    ========================================================================== */
 
 .hero-viewport {
@@ -20,210 +18,124 @@
   left: 50%;
   transform: translateX(-50%);
   z-index: 50;
-  width: min(100% - 2rem, 1200px);
+  width: min(100% - 2rem, 1240px);
   display: flex;
   align-items: center;
   justify-content: space-between;
   gap: 1.5rem;
-  padding: 0.7rem 0.7rem 0.7rem 1.5rem;
+  padding: 0.6rem 0.6rem 0.6rem 1.5rem;
   border-radius: 999px;
-  border: 1px solid rgba(255, 255, 255, 0.08);
+  border: 1px solid var(--rule);
   /* Opaque, not blurred. A backdrop-filter on a position:fixed bar forces the
      compositor to re-sample the page behind it on every scroll frame. */
   background: #14161a;
 }
 
 .nav-logo {
+  font-family: var(--font-heading);
+  font-variation-settings: 'wdth' 110;
   font-weight: 700;
-  font-size: 1rem;
+  font-size: 0.95rem;
   color: var(--text-bright);
   white-space: nowrap;
 }
 
-.nav-links {
-  display: flex;
-  gap: 1.75rem;
-  font-size: 0.82rem;
-}
+.nav-links { display: flex; gap: 1.75rem; font-size: var(--t-label); }
 
 .nav-links a {
   color: var(--text-muted);
-  text-decoration: none;
-  transition: color 0.25s ease;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
 }
 
 .nav-links a:hover,
-.nav-links a:focus-visible {
-  color: var(--color-terminal);
-}
+.nav-links a:focus-visible { color: var(--signal); }
 
 .btn-contact {
-  padding: 0.6rem 1.35rem;
+  padding: 0.55rem 1.3rem;
   border-radius: 999px;
-  font-size: 0.85rem;
-  font-weight: 600;
-  text-decoration: none;
+  font-family: var(--font-mono);
+  font-variation-settings: 'wdth' var(--wd-mono);
+  font-size: var(--t-label);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
   white-space: nowrap;
   color: #fff;
-  background: linear-gradient(135deg, var(--signal), var(--signal));
-  transition: filter 0.25s ease, transform 0.25s ease;
+  background: var(--signal);
+  transition: filter var(--dur) var(--ease);
 }
 
-.btn-contact:hover {
-  filter: brightness(1.15);
-}
+.btn-contact:hover { filter: brightness(1.15); }
 
 /* ---- stage ------------------------------------------------------------- */
 .hero-stage {
   position: relative;
   flex: 1;
   display: flex;
-  align-items: flex-end;
+  align-items: center;
   min-height: 100svh;
-  opacity: 0;
-  transition: opacity 0.6s ease;
 }
 
-.hero-stage.is-loaded {
-  opacity: 1;
-}
-
-.hero-skeleton {
-  position: absolute;
-  inset: 0;
-  background: linear-gradient(100deg, #0b0f18 30%, #141a26 50%, #0b0f18 70%);
-  background-size: 220% 100%;
-  animation: hero-skeleton-pulse 1.4s ease-in-out infinite;
-}
-
-@keyframes hero-skeleton-pulse {
-  from { background-position: 200% 0; }
-  to { background-position: -20% 0; }
-}
-
-/* ---- avatar layers ----------------------------------------------------- */
-.hero-avatar-layers {
-  position: absolute;
-  inset: 0;
-  pointer-events: none;
-}
-
-.hero-reveal-img {
-  position: absolute;
-  inset: 0;
-  background-size: contain;
-  background-position: center bottom;
-  background-repeat: no-repeat;
-}
-
-/* The voxel art is a transparent cutout and can sit full-bleed. The photo
-   fallback is a normal rectangular photograph, so it gets pushed right,
-   contained, and dimmed — otherwise it floods the frame and swallows the
-   headline. Remove nothing here when the PNGs land; the class just stops
-   being applied. */
-.hero-avatar-layers.is-fallback .hero-reveal-img--base {
-  background-size: auto 74%;
-  background-position: right 3vw bottom;
-  opacity: 0.16;
-}
-
-/* Scrim keeps the copy column readable over whichever image is showing. */
-.hero-scrim {
-  position: absolute;
-  inset: 0;
-  z-index: 1;
-  pointer-events: none;
-  background:
-    linear-gradient(100deg, var(--bg-deep) 18%, rgba(6, 9, 19, 0.82) 42%, rgba(6, 9, 19, 0.15) 72%),
-    linear-gradient(to top, var(--bg-deep) 2%, transparent 30%);
-}
-
-.hero-reveal-img--flame {
-  -webkit-mask-image: radial-gradient(
-    circle 220px at var(--x, 50%) var(--y, 50%),
-    #000 0%, #000 55%, transparent 100%
-  );
-  mask-image: radial-gradient(
-    circle 220px at var(--x, 50%) var(--y, 50%),
-    #000 0%, #000 55%, transparent 100%
-  );
-}
-
-/* ---- copy -------------------------------------------------------------- */
 .hero-copy {
-  position: relative;
-  z-index: 2;
   width: 100%;
-  padding-bottom: clamp(3rem, 8vh, 6rem);
-  padding-top: 9rem;
+  padding-top: 7.5rem;
+  padding-bottom: clamp(2rem, 5vh, 3.5rem);
+  align-content: start;
   display: grid;
-  grid-template-columns: minmax(0, 7fr) minmax(0, 4fr);
+  grid-template-columns: minmax(0, 7fr) minmax(0, 5fr);
   grid-template-areas:
-    'mark mark'
-    'head meta'
-    'sub  meta'
-    'act  act';
-  column-gap: clamp(1.5rem, 4vw, 3.5rem);
-  row-gap: 1.15rem;
+    'mark  mark'
+    'head  orbit'
+    'sub   orbit'
+    'meta  orbit'
+    'act   act';
+  column-gap: clamp(1.5rem, 4vw, 4rem);
+  row-gap: 0.9rem;
   align-items: start;
 }
 
-/* ---- SIGNATURE: the wordmark carries the portrait ----------------------
-   The name is set oversized and bleeds past the copy column; the avatar is
-   clipped INTO the letterforms. Declared solid first so every browser gets
-   readable type, then upgraded only where background-clip: text is real. */
+/* ---- SIGNATURE: a two-weight wordmark ----------------------------------
+   Given name solid, surname cut to outline. The contrast between filled and
+   hollow is the mark; no image sits inside the letterforms. */
 .hero-wordmark {
   grid-area: mark;
   font-family: var(--font-heading);
   font-variation-settings: 'wdth' 125;
   font-weight: 800;
-  font-size: clamp(2.6rem, 11vw, 8.5rem);
+  font-size: clamp(2.2rem, 8.6vw, 6.2rem);
   line-height: 0.86;
   letter-spacing: -0.045em;
   text-transform: uppercase;
-  margin-left: -0.06em;
-  margin-bottom: var(--s-2);
-  /* Fallback: solid, always legible. */
-  color: var(--text-bright);
-  background-repeat: no-repeat;
-  background-size: cover;
-  background-position: center 22%;
+  margin-left: -0.055em;
+  margin-bottom: var(--s-4);
+  display: flex;
+  flex-direction: column;
 }
 
-@supports ((-webkit-background-clip: text) or (background-clip: text)) {
-  .hero-wordmark {
-    -webkit-background-clip: text;
-    background-clip: text;
-    -webkit-text-fill-color: transparent;
-    color: transparent;
-    /* A hairline keeps the mark readable wherever the image goes dark. */
-    -webkit-text-stroke: 1.5px var(--rule);
-  }
+.hero-wordmark__solid { color: var(--text-bright); }
 
-  /* The photo fallback is a rectangular snapshot rather than a cutout, so it
-     is desaturated and lifted before being clipped, or the letterforms read
-     as noise. */
-  .hero-wordmark.is-fallback {
-    background-size: 165% auto;
-    background-position: center 34%;
-    filter: saturate(0.35) contrast(0.92) brightness(1.85);
-  }
+.hero-wordmark__outline {
+  color: transparent;
+  -webkit-text-stroke: 1.5px var(--dim);
 }
 
+@supports not ((-webkit-text-stroke: 1px black)) {
+  .hero-wordmark__outline { color: var(--dim); }
+}
+
+/* ---- copy -------------------------------------------------------------- */
 .hero-headline {
   grid-area: head;
   font-family: var(--font-body);
   font-optical-sizing: auto;
-  font-size: clamp(1.35rem, 2.9vw, 2.35rem);
-  line-height: 1.28;
+  font-size: clamp(1.3rem, 2.7vw, 2.15rem);
+  line-height: 1.3;
   letter-spacing: -0.012em;
   font-weight: 400;
   color: var(--text-bright);
   max-width: 22ch;
-  text-wrap: balance;
 }
 
-/* word-by-word cascade */
 .word-reveal {
   display: inline-block;
   opacity: 0;
@@ -232,18 +144,15 @@
 }
 
 @keyframes wordReveal {
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
+  to { opacity: 1; transform: translateY(0); }
 }
 
 .hero-sub {
   grid-area: sub;
-  font-size: clamp(0.92rem, 1.5vw, 1.05rem);
-  line-height: 1.7;
+  font-size: clamp(0.92rem, 1.4vw, 1.02rem);
+  line-height: 1.75;
   color: var(--text-main);
-  max-width: 52ch;
+  max-width: 46ch;
 }
 
 .hero-status {
@@ -262,6 +171,7 @@
   border-left: 2px solid var(--signal);
   border-radius: var(--r-sm);
   padding: var(--s-3) var(--s-4);
+  max-width: 46ch;
 }
 
 .hero-status-dot {
@@ -269,8 +179,7 @@
   width: 6px;
   height: 6px;
   border-radius: 50%;
-  background: var(--color-terminal);
-  box-shadow: 0 0 0 3px var(--signal-wash);
+  background: var(--signal);
   flex-shrink: 0;
 }
 
@@ -280,8 +189,8 @@
   display: flex;
   flex-wrap: wrap;
   align-items: center;
-  gap: 1.5rem 2rem;
-  margin-top: 0.5rem;
+  gap: 1.25rem 2rem;
+  margin-top: var(--s-4);
 }
 
 .cta-button {
@@ -289,13 +198,15 @@
   display: inline-flex;
   align-items: center;
   gap: 0.9rem;
-  padding: 0.6rem 0.6rem 0.6rem 1.5rem;
+  padding: 0.5rem 0.5rem 0.5rem 1.5rem;
   border-radius: 999px;
-  background: var(--text-bright);
-  color: #0b0f18;
-  text-decoration: none;
-  font-weight: 600;
-  font-size: 0.92rem;
+  background: var(--paper);
+  color: var(--ink);
+  font-family: var(--font-mono);
+  font-variation-settings: 'wdth' var(--wd-mono);
+  font-size: var(--t-label);
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
   overflow: hidden;
   isolation: isolate;
 }
@@ -304,117 +215,250 @@
   position: absolute;
   inset: 0;
   z-index: -1;
-  background: var(--color-terminal);
+  background: var(--signal);
   transform: scaleX(0);
   transform-origin: left center;
-  transition: transform 0.35s cubic-bezier(0.22, 1, 0.36, 1);
+  transition: transform 0.35s var(--ease);
 }
 
 .cta-button:hover .cta-button__fill,
-.cta-button:focus-visible .cta-button__fill {
-  transform: scaleX(1);
-}
+.cta-button:focus-visible .cta-button__fill { transform: scaleX(1); }
 
 .cta-button__label,
-.cta-button__icon {
-  transition: transform 0.35s cubic-bezier(0.22, 1, 0.36, 1), color 0.35s ease;
-}
+.cta-button__icon { transition: transform 0.35s var(--ease), color 0.35s ease; }
+
+.cta-button:hover .cta-button__label { color: #fff; }
 
 .cta-button__icon {
   display: grid;
   place-items: center;
-  width: 34px;
-  height: 34px;
+  width: 32px;
+  height: 32px;
   border-radius: 50%;
-  background: #0b0f18;
-  color: var(--color-terminal);
+  background: var(--ink);
+  color: var(--signal);
 }
 
-.cta-button:hover .cta-button__icon,
-.cta-button:focus-visible .cta-button__icon {
-  transform: translateX(4px);
-}
+.cta-button:hover .cta-button__icon { transform: translateX(4px); }
 
-.hero-socials {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 1.25rem;
-  font-size: 0.8rem;
-}
+.hero-socials { display: flex; flex-wrap: wrap; gap: 1.25rem; font-size: var(--t-label); }
 
 .hero-social {
   display: inline-flex;
   align-items: center;
   gap: 0.45rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
   color: var(--text-muted);
-  text-decoration: none;
-  transition: color 0.25s ease;
 }
 
 .hero-social:hover,
-.hero-social:focus-visible {
-  color: var(--color-terminal);
+.hero-social:focus-visible { color: var(--signal); }
+
+/* ==========================================================================
+   THE NUCLEUS — portrait at the centre, links orbiting it.
+   ========================================================================== */
+.hero-orbit {
+  grid-area: orbit;
+  display: grid;
+  place-items: center;
+  align-self: center;
+  min-height: clamp(240px, 26vw, 360px);
 }
 
-/* ---- bottom fade into the next section --------------------------------- */
-.hero-bottom-fade {
+.atom-system {
+  position: relative;
+  width: clamp(280px, 32vw, 430px);
+  aspect-ratio: 1;
+  display: grid;
+  place-items: center;
+  transform-style: preserve-3d;
+  perspective: 1200px;
+}
+
+/* A quiet plate behind the whole system so it reads as an instrument, not a
+   sticker floating on the page. */
+.orbit-plate {
   position: absolute;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  height: 18vh;
-  background: linear-gradient(to bottom, transparent, var(--bg-deep));
+  inset: 6%;
+  border-radius: 50%;
+  border: 1px solid var(--rule);
+  background:
+    radial-gradient(circle at 50% 42%, rgb(46 91 255 / 8%), transparent 62%),
+    var(--plate);
+}
+
+.center-nucleus {
+  position: absolute;
+  width: 52%;
+  aspect-ratio: 1;
+  border-radius: 50%;
+  overflow: hidden;
+  z-index: 10;
+  border: 1px solid var(--rule);
+  box-shadow:
+    inset 0 -14px 34px rgb(0 0 0 / 55%),
+    0 14px 38px -16px rgb(0 0 0 / 80%);
+}
+
+.center-nucleus .profile-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center 22%;
+  filter: grayscale(0.35) contrast(1.08);
+  transition: filter var(--dur-slow) var(--ease);
+}
+
+.atom-system:hover .center-nucleus .profile-img { filter: grayscale(0) contrast(1.05); }
+
+/* ---- rings ------------------------------------------------------------- */
+.orbit-ring {
+  position: absolute;
+  width: 92%;
+  height: 92%;
+  border-radius: 50%;
+  border: 1px solid color-mix(in srgb, var(--rule) 70%, var(--signal));
+  transform-style: preserve-3d;
+}
+
+.ring-1 { transform: rotateX(72deg) rotateY(28deg); }
+.ring-2 { width: 100%; height: 100%; border-style: dashed; transform: rotateX(72deg) rotateY(-28deg); }
+
+.electron-wrapper {
+  position: absolute;
+  inset: 0;
+  animation: orbit-spin 26s linear infinite;
+  transform-style: preserve-3d;
+}
+
+.electron-node {
+  position: absolute;
+  top: -18px;
+  left: calc(50% - 18px);
+  width: 36px;
+  height: 36px;
+  animation-duration: 26s;
+  animation-iteration-count: infinite;
+  animation-timing-function: linear;
+  transform-style: preserve-3d;
+}
+
+.node-1 { animation-name: invert-spin-1; }
+.node-2 { animation-name: invert-spin-2; }
+
+@keyframes orbit-spin {
+  from { transform: rotateZ(0deg); }
+  to { transform: rotateZ(360deg); }
+}
+
+@keyframes invert-spin-1 {
+  from { transform: rotateZ(0deg) rotateY(-28deg) rotateX(-72deg); }
+  to { transform: rotateZ(-360deg) rotateY(-28deg) rotateX(-72deg); }
+}
+
+@keyframes invert-spin-2 {
+  from { transform: rotateZ(0deg) rotateY(28deg) rotateX(-72deg); }
+  to { transform: rotateZ(-360deg) rotateY(28deg) rotateX(-72deg); }
+}
+
+/* ---- satellites -------------------------------------------------------- */
+.satellite-content {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  background: var(--ink);
+  border: 1px solid var(--rule);
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  color: var(--text-main);
+  transition: color var(--dur) var(--ease), border-color var(--dur) var(--ease), transform var(--dur) var(--ease);
+}
+
+.satellite-content:hover,
+.satellite-content:focus-visible {
+  color: var(--signal);
+  border-color: var(--signal);
+  transform: scale(1.12);
+}
+
+.node-tooltip {
+  position: absolute;
+  top: -34px;
+  background: var(--plate);
+  padding: 5px 10px;
+  border-radius: var(--r-sm);
+  border: 1px solid var(--rule);
+  font-size: 0.58rem;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--text-bright);
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity var(--dur) var(--ease), top var(--dur) var(--ease);
+  white-space: nowrap;
   pointer-events: none;
-  z-index: 1;
+  z-index: 50;
+}
+
+.satellite-content:hover .node-tooltip,
+.satellite-content:focus-visible .node-tooltip {
+  opacity: 1;
+  visibility: visible;
+  top: -42px;
+}
+
+/* Pausing on hover makes the links actually clickable. */
+.atom-system:hover .electron-wrapper,
+.atom-system:hover .electron-node,
+.atom-system:focus-within .electron-wrapper,
+.atom-system:focus-within .electron-node {
+  animation-play-state: paused;
 }
 
 /* ---- responsive -------------------------------------------------------- */
-@media (max-width: 900px) {
+@media (max-width: 980px) {
   .hero-copy {
     grid-template-columns: minmax(0, 1fr);
-    grid-template-areas: 'mark' 'head' 'sub' 'meta' 'act';
+    grid-template-areas: 'mark' 'orbit' 'head' 'sub' 'meta' 'act';
+    row-gap: 1.5rem;
   }
 
-  .nav-links {
-    display: none;
-  }
-
-  .hero-reveal-img {
-    background-size: 150% auto;
-    opacity: 0.35;
-  }
-
-  .hero-copy {
-    padding-top: 7rem;
-  }
+  .hero-orbit { min-height: auto; margin-block: var(--s-4); }
+  .nav-links { display: none; }
 }
 
 @media (max-width: 480px) {
-  .top-nav {
-    padding-left: 1.1rem;
-  }
-
-  .nav-logo {
-    font-size: 0.9rem;
-  }
-
-  .hero-actions {
-    gap: 1.25rem;
-  }
+  .top-nav { padding-left: 1.1rem; }
+  .atom-system { width: min(78vw, 300px); }
+  .hero-copy { padding-top: 7.5rem; }
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .word-reveal {
-    animation: none;
-    opacity: 1;
-    transform: none;
+  .word-reveal { animation: none; opacity: 1; transform: none; }
+  .electron-wrapper,
+  .electron-node { animation: none; }
+  .cta-button__fill { transition: none; }
+}
+
+/* Short viewports (13" laptops) — keep the résumé CTA above the fold rather
+   than letting the wordmark push it off the bottom. */
+@media (min-width: 981px) and (max-height: 860px) {
+  .hero-copy {
+    padding-top: 5.75rem;
+    padding-bottom: 1.5rem;
+    row-gap: 0.5rem;
   }
 
-  .hero-skeleton {
-    animation: none;
+  .hero-wordmark {
+    font-size: clamp(1.9rem, 5.6vw, 4rem);
+    margin-bottom: var(--s-1);
   }
 
-  .cta-button__fill {
-    transition: none;
-  }
+  .hero-headline { font-size: clamp(1.15rem, 1.9vw, 1.55rem); }
+  .hero-sub { font-size: 0.9rem; line-height: 1.6; }
+  .hero-status { padding: var(--s-2) var(--s-3); }
+  .hero-orbit { min-height: clamp(180px, 18vw, 250px); }
+  .hero-actions { margin-top: var(--s-2); gap: 0.9rem 1.5rem; }
 }
