@@ -28,6 +28,22 @@ const outerNodes = projects
 const ORBIT_PERIOD = 26;
 const delayFor = (i, total) => `${-(ORBIT_PERIOD / total) * i}s`;
 
+/* One pill, used by every action in the hero. */
+function PillButton(props) {
+  const { Icon } = props;
+  return (
+    <a
+      className="cta-button"
+      href={props.href}
+      {...(props.external ? { target: '_blank', rel: 'noreferrer' } : {})}
+    >
+      <span className="cta-button__fill" aria-hidden="true" />
+      <span className="cta-button__label">{props.label}</span>
+      <span className="cta-button__icon" aria-hidden="true"><Icon size={15} /></span>
+    </a>
+  );
+}
+
 /* Splits the headline into spans so each word can cascade in on mount. */
 function WordReveal({ text, className, delayStep = 0.05, disabled }) {
   return (
@@ -97,23 +113,17 @@ export default function Hero() {
           </p>
 
           <div className="hero-actions">
-            <a className="cta-button" href={profile.resumeUrl}>
-              <span className="cta-button__fill" aria-hidden="true" />
-              <span className="cta-button__label">View Résumé</span>
-              <span className="cta-button__icon" aria-hidden="true"><ArrowRight size={16} /></span>
-            </a>
+            <PillButton href={profile.resumeUrl} label="View Résumé" Icon={ArrowRight} />
 
-            <div className="hero-socials text-mono">
-              {socialLinks.map((social) => {
-                const { Icon } = social;
-                return (
-                  <a key={social.label} href={social.href} target="_blank" rel="noreferrer" className="hero-social">
-                    <Icon size={16} />
-                    {social.label}
-                  </a>
-                );
-              })}
-            </div>
+            {socialLinks.map((social) => (
+              <PillButton
+                key={social.label}
+                href={social.href}
+                label={social.label}
+                Icon={social.Icon}
+                external
+              />
+            ))}
           </div>
 
           {/* Nucleus + orbits */}
