@@ -193,12 +193,12 @@
   display: grid;
   place-items: center;
   align-self: center;
-  min-height: clamp(240px, 26vw, 360px);
+  min-height: clamp(260px, 28vw, 400px);
 }
 
 .atom-system {
   position: relative;
-  width: clamp(280px, 32vw, 430px);
+  width: clamp(300px, 34vw, 470px);
   aspect-ratio: 1;
   display: grid;
   place-items: center;
@@ -220,14 +220,14 @@
 
 .center-nucleus {
   position: absolute;
-  width: 52%;
+  width: 62%;
   aspect-ratio: 1;
   border-radius: 50%;
   overflow: hidden;
   z-index: 10;
   border: 1px solid var(--rule);
   box-shadow:
-    inset 0 -14px 34px rgb(0 0 0 / 55%),
+    inset 0 -14px 34px rgb(0 0 0 / 30%),
     0 14px 38px -16px rgb(0 0 0 / 80%);
 }
 
@@ -236,11 +236,11 @@
   height: 100%;
   object-fit: cover;
   object-position: center 22%;
-  filter: grayscale(0.35) contrast(1.08);
+  filter: grayscale(0) contrast(1.02);
   transition: filter var(--dur-slow) var(--ease);
 }
 
-.atom-system:hover .center-nucleus .profile-img { filter: grayscale(0) contrast(1.05); }
+.atom-system:hover .center-nucleus .profile-img { filter: grayscale(0) contrast(1.06) saturate(1.04); }
 
 /* ---- rings ------------------------------------------------------------- */
 .orbit-ring {
@@ -361,7 +361,7 @@
 
 @media (max-width: 480px) {
   .top-nav { padding-left: 1.1rem; }
-  .atom-system { width: min(78vw, 300px); }
+  .atom-system { width: min(82vw, 330px); }
   .hero-copy { padding-top: 7.5rem; }
 }
 

@@ -1,8 +1,8 @@
 import React from 'react';
 
-import { Github, Linkedin, Code, Boxes, ArrowRight, Mail, Activity } from 'lucide-react';
+import { Github, Linkedin, Code, Boxes, ArrowRight, Mail, Activity, Coins } from 'lucide-react';
 import './Hero.css';
-import { profile, links, projects, assets } from '../data';
+import { profile, links, orbit, assets, getProject } from '../data';
 import { usePrefersReducedMotion } from '../lib/useAsset';
 
 const socialLinks = [
@@ -12,18 +12,38 @@ const socialLinks = [
   { href: links.huggingface, label: 'HuggingFace', Icon: Boxes },
 ].filter((l) => l.href);
 
-/* Inner ring: profile destinations. Outer ring: live deployments, pulled
-   from whichever projects actually expose a live URL. */
-const innerNodes = [
-  { href: links.linkedin, label: 'LinkedIn Profile', Icon: Linkedin },
-  { href: links.github, label: 'GitHub Profile', Icon: Github },
-  { href: links.leetcode, label: 'LeetCode Profile', Icon: Code },
-].filter((n) => n.href);
+/* Icons are presentation, so the mapping lives here and data.js only names
+   one — same contract Skills.jsx uses for its group icons. */
+const ORBIT_ICON = {
+  linkedin: Linkedin,
+  github: Github,
+  code: Code,
+  boxes: Boxes,
+  mail: Mail,
+  activity: Activity,
+  coins: Coins,
+};
 
-const outerNodes = projects
-  .flatMap((p) => p.links.filter((l) => l.kind === 'live' && l.href).map((l) => ({ ...l, title: p.title })))
-  .slice(0, 2)
-  .map((l, i) => ({ href: l.href, label: `${l.title} Live`, Icon: i === 0 ? Mail : Activity }));
+/* A node is either a profile off `links` or a project's live deployment.
+   Anything that cannot be resolved to a real URL is dropped rather than
+   rendered as a dead orbiting dot. */
+function resolveNode(node) {
+  const Icon = ORBIT_ICON[node.icon] || Boxes;
+
+  if (node.project) {
+    const project = getProject(node.project);
+    const live = project?.links.find((l) => l.kind === 'live' && l.href);
+    if (!live) return null;
+    return { href: live.href, label: `${project.title} — live`, Icon };
+  }
+
+  const href = links[node.link];
+  if (!href) return null;
+  return { href, label: `${node.label} profile`, Icon };
+}
+
+const innerNodes = orbit.inner.map(resolveNode).filter(Boolean);
+const outerNodes = orbit.outer.map(resolveNode).filter(Boolean);
 
 const ORBIT_PERIOD = 26;
 const delayFor = (i, total) => `${-(ORBIT_PERIOD / total) * i}s`;
@@ -113,7 +133,7 @@ export default function Hero() {
           </p>
 
           <div className="hero-actions">
-            <PillButton href={profile.resumeUrl} label="View Résumé" Icon={ArrowRight} />
+            <PillButton href={profile.resumeUrl} label="View Résumé" Icon={ArrowRight} external />
 
             {socialLinks.map((social) => (
               <PillButton

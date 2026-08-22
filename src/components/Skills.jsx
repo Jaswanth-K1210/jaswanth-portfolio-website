@@ -1,8 +1,8 @@
 import React from 'react';
 
-import { Code2, Monitor, Database, Brain, Server, Cpu, Wrench } from 'lucide-react';
+import { Code2, Monitor, Database, Brain, Server, Cpu, Wrench, GraduationCap, Sprout } from 'lucide-react';
 import './Skills.css';
-import { skills, workingKnowledge, getProject } from '../data';
+import { skills, coreCS, workingKnowledge, currentlyLearning, getProject } from '../data';
 
 /* Icons are presentation, not content — mapped by group, never stored in data.js. */
 const GROUP_ICON = {
@@ -10,7 +10,9 @@ const GROUP_ICON = {
   'ML / AI': Brain,
   Backend: Server,
   Frontend: Monitor,
+  Databases: Database,
   'Systems & Infra': Cpu,
+  'Core CS': GraduationCap,
 };
 const FallbackIcon = Database;
 
@@ -52,6 +54,23 @@ export default function Skills() {
           );
         })}
 
+        {coreCS.length > 0 && (
+          <div className="skill-box glass-panel">
+            <div className="skill-box-header">
+              <h3 className="text-primary text-mono">Core CS</h3>
+              <GraduationCap size={20} className="text-accent" />
+            </div>
+
+            <div className="skill-pills">
+              {coreCS.map((name) => (
+                <span key={name} className="pill-tag" title="Coursework and fundamentals — spans every project rather than any one of them.">
+                  {name}
+                </span>
+              ))}
+            </div>
+          </div>
+        )}
+
         {workingKnowledge.length > 0 && (
           <div className="skill-box glass-panel">
             <div className="skill-box-header">
@@ -62,6 +81,23 @@ export default function Skills() {
             <div className="skill-pills">
               {workingKnowledge.map((name) => (
                 <span key={name} className="pill-tag" title="Used, but no project on this site proves it.">
+                  {name}
+                </span>
+              ))}
+            </div>
+          </div>
+        )}
+
+        {currentlyLearning.length > 0 && (
+          <div className="skill-box glass-panel">
+            <div className="skill-box-header">
+              <h3 className="text-primary text-mono">Currently Learning</h3>
+              <Sprout size={20} className="text-accent" />
+            </div>
+
+            <div className="skill-pills">
+              {currentlyLearning.map((name) => (
+                <span key={name} className="pill-tag" title="Actively learning — no project here proves it yet.">
                   {name}
                 </span>
               ))}
