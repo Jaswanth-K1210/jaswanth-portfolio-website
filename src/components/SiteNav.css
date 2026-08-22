@@ -1,0 +1,60 @@
+/* ==========================================================================
+   SiteNav — fixed page header. Rendered at the top of the tree so it is not
+   captured by any section's stacking context.
+   ========================================================================== */
+
+.top-nav {
+  position: fixed;
+  top: 1rem;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 900;
+  width: min(100% - 2rem, 1240px);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1.5rem;
+  padding: 0.6rem 0.6rem 0.6rem 1.5rem;
+  border-radius: 999px;
+  border: 1px solid var(--rule);
+  /* Opaque, not blurred. A backdrop-filter on a position:fixed bar forces the
+     compositor to re-sample the page behind it on every scroll frame. */
+  background: #14161a;
+}
+
+.nav-logo {
+  font-family: var(--font-heading);
+  font-variation-settings: 'wdth' 110;
+  font-weight: 700;
+  font-size: 0.95rem;
+  color: var(--text-bright);
+  white-space: nowrap;
+}
+
+.nav-links { display: flex; gap: 1.75rem; font-size: var(--t-label); }
+
+.nav-links a {
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+
+.nav-links a:hover,
+.nav-links a:focus-visible { color: var(--signal); }
+
+.btn-contact {
+  padding: 0.55rem 1.3rem;
+  border-radius: 999px;
+  font-family: var(--font-mono);
+  font-variation-settings: 'wdth' var(--wd-mono);
+  font-size: var(--t-label);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  white-space: nowrap;
+  color: #fff;
+  background: var(--signal);
+  transition: filter var(--dur) var(--ease);
+}
+
+.btn-contact:hover { filter: brightness(1.15); }
+

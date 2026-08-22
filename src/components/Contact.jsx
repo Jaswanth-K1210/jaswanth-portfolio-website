@@ -1,58 +1,85 @@
-import React from 'react';
+import React, { useRef } from 'react';
+import { motion as Motion, useScroll, useTransform } from 'framer-motion';
 
-import { Mail, Github, Linkedin, ExternalLink, Radio } from 'lucide-react';
 import './Contact.css';
+import MagicCard from './MagicCard';
+import { profile, links, assets } from '../data';
+import { useImageStatus, usePrefersReducedMotion } from '../lib/useAsset';
+
+const email = profile.email || links.email;
+
+/* Only links that exist in data.js are rendered — no dead entries. */
+const contactLinks = [
+  email && { label: 'Email', href: `mailto:${email}` },
+  links.linkedin && { label: 'LinkedIn', href: links.linkedin, external: true },
+  links.github && { label: 'GitHub', href: links.github, external: true },
+  links.leetcode && { label: 'LeetCode', href: links.leetcode, external: true },
+  links.huggingface && { label: 'HuggingFace', href: links.huggingface, external: true },
+].filter(Boolean);
 
 export default function Contact() {
+  const ref = useRef(null);
+  const reducedMotion = usePrefersReducedMotion();
+  const skyStatus = useImageStatus(assets.nightSky);
+  const llamaStatus = useImageStatus(assets.llama);
+
+  const { scrollYProgress } = useScroll({
+    target: ref,
+    offset: ['start end', 'end start'],
+  });
+  const skyY = useTransform(scrollYProgress, [0, 1], ['-14%', '6%']);
+
   return (
-    <footer className="section container" id="contact" style={{ marginBottom: '4rem' }}>
-      <div className="section-header-terminal">
-        <h2><Radio size={20} /> SECURE_COMMS // TRANSMISSION_PORT</h2>
-        <div className="section-stats text-primary blink">
-          UPLINK: ACTIVE
-        </div>
-      </div>
+    <footer className="cta-section" id="contact" ref={ref}>
+      {/* Oversized, offset upward, drifting slowly as the section scrolls past. */}
+      {skyStatus === 'ready' ? (
+        <Motion.div
+          className="cta-sky"
+          style={{
+            backgroundImage: `url(${assets.nightSky})`,
+            y: reducedMotion ? 0 : skyY,
+          }}
+          aria-hidden="true"
+        />
+      ) : (
+        <div className="cta-sky cta-sky--fallback" aria-hidden="true" />
+      )}
 
-      <div
-        className="contact-panel glass-panel"
-      >
-        <div className="panel-header" style={{ borderColor: 'var(--color-primary-dim)' }}>
-          <span className="text-muted">[ NODE_ACCESS: OPEN ]</span>
-          <span className="text-primary text-mono">AWAITING_HANDSHAKE</span>
-        </div>
+      <div className="cta-top-fade" aria-hidden="true" />
 
-        <div className="contact-grid">
-          <div className="contact-intel">
-            <h3 className="text-primary text-mono mb-2" style={{ fontSize: '1.2rem' }}>&gt; INITIATE_DIALOGUE</h3>
-            <p className="text-muted" style={{ lineHeight: '1.6', fontSize: '0.95rem' }}>
-              Whether you want to discuss Physics-Informed Neural Dynamics, deployable multi-agent environments, or full-stack engineering roles—my communication ports are open and polling.
+      <div className="cta-inner container">
+        {llamaStatus === 'ready' && (
+          <img src={assets.llama} alt="" className="cta-mascot" />
+        )}
+
+        <MagicCard className={llamaStatus === 'ready' ? 'cta-card has-mascot' : 'cta-card'} disabled={reducedMotion}>
+          <div className="cta-card__content">
+            <p className="cta-eyebrow text-mono">Get in touch</p>
+            <h2 className="cta-heading">Let&rsquo;s build something worth measuring.</h2>
+            <p className="cta-body text-muted">
+              {profile.status}. Based in {profile.location}.
             </p>
+
+            <nav className="cta-links text-mono" aria-label="Contact links">
+              {contactLinks.map((l, i) => (
+                <React.Fragment key={l.label}>
+                  {i > 0 && <span className="cta-dot" aria-hidden="true">•</span>}
+                  <a
+                    href={l.href}
+                    className="cta-link"
+                    {...(l.external ? { target: '_blank', rel: 'noopener noreferrer' } : {})}
+                  >
+                    {l.label}
+                  </a>
+                </React.Fragment>
+              ))}
+            </nav>
           </div>
+        </MagicCard>
 
-          <div className="contact-links text-mono text-primary">
-            <a href="mailto:jaswanth.koppisetty@example.com" className="contact-btn">
-              <Mail size={18} className="mr-3 text-accent" />
-              <span>&gt; SMTP // E-MAIL</span>
-              <ExternalLink size={14} className="ml-auto text-muted" />
-            </a>
-
-            <a href="https://github.com/Jaswanth-K1210" target="_blank" rel="noopener noreferrer" className="contact-btn">
-              <Github size={18} className="mr-3 text-accent" />
-              <span>&gt; REPO // GITHUB</span>
-              <ExternalLink size={14} className="ml-auto text-muted" />
-            </a>
-
-            <a href="https://www.linkedin.com/in/jaswanth-koppisetty/" target="_blank" rel="noopener noreferrer" className="contact-btn">
-              <Linkedin size={18} className="mr-3 text-accent" />
-              <span>&gt; NET // LINKEDIN</span>
-              <ExternalLink size={14} className="ml-auto text-muted" />
-            </a>
-          </div>
-        </div>
-      </div>
-
-      <div className="footer-bottom text-mono text-muted mt-5">
-        <p>SYSTEM_HALTED. &copy; {new Date().getFullYear()} Jaswanth Koppisetty. AI Systems Engineer.</p>
+        <p className="cta-colophon text-mono text-muted">
+          &copy; {new Date().getFullYear()} {profile.name}
+        </p>
       </div>
     </footer>
   );

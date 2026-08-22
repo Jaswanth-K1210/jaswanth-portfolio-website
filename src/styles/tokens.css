@@ -1,0 +1,354 @@
+/* ==========================================================================
+   tokens.css — the whole design system. One file.
+   Direction: "Instrument" — the portfolio as a measurement readout.
+
+   Two rules govern everything below:
+   1. One accent. It means "interactive or verified." Nothing else is accent.
+   2. Two typographic registers: PROVEN and STATED. A claim backed by a linked
+      project is set solid. A claim that is a target, an estimate, or working
+      knowledge is set in the stated register — dimmed, dotted, unlinked.
+      This is load-bearing, not decorative. See --register-* below.
+   ========================================================================== */
+
+/* --------------------------------------------------------------------------
+   FONTS — self-hosted, latin-subset, variable. No CDN call.
+   Bricolage Grotesque   display   wdth+opsz+wght axes  132 KB
+   Geist                 body      wght axis             32 KB
+   Geist Mono            metadata  wght axis             24 KB
+   -------------------------------------------------------------------------- */
+@font-face {
+  font-family: "Bricolage Grotesque";
+  src: url("/fonts/bricolage.woff2") format("woff2-variations");
+  font-weight: 400 800;
+  font-stretch: 75% 100%;
+  font-display: swap;
+  unicode-range: U+0000-00FF, U+2000-206F, U+2190-21BB, U+2212;
+}
+@font-face {
+  font-family: "Geist";
+  src: url("/fonts/geist.woff2") format("woff2-variations");
+  font-weight: 100 900;
+  font-display: swap;
+  unicode-range: U+0000-00FF, U+2000-206F, U+2212;
+}
+@font-face {
+  font-family: "Geist Mono";
+  src: url("/fonts/geistmono.woff2") format("woff2-variations");
+  font-weight: 100 900;
+  font-display: swap;
+  unicode-range: U+0000-00FF, U+2000-206F, U+2212;
+}
+
+:root {
+  /* ---- TYPEFACES ------------------------------------------------------- */
+  --font-display: "Bricolage Grotesque", "Helvetica Neue", sans-serif;
+  --font-body: "Geist", system-ui, -apple-system, sans-serif;
+  --font-mono: "Geist Mono", ui-monospace, "SF Mono", monospace;
+
+  /* ---- TYPE SCALE ------------------------------------------------------
+     Display is set tight and wide-axis-narrowed. Body stays generous.
+     Mono is the metadata voice: small, tracked out, uppercase.           */
+  --t-d1: clamp(2.75rem, 7vw, 5.25rem);
+  --t-d2: clamp(2rem, 4.5vw, 3.25rem);
+  --t-d3: clamp(1.5rem, 3vw, 2rem);
+  --t-lead: clamp(1.0625rem, 1.6vw, 1.1875rem);
+  --t-body: 1rem;
+  --t-small: 0.875rem;
+  --t-meta: 0.75rem;
+
+  --lh-display: 0.95;
+  --lh-d3: 1.15;
+  --lh-body: 1.6;
+  --lh-tight: 1.35;
+
+  --tr-display: -0.035em; /* tight tracking, the brief asked for it */
+  --tr-d3: -0.02em;
+  --tr-body: -0.005em;
+  --tr-meta: 0.08em; /* mono opens up instead of tightening */
+
+  --wd-display: 92; /* Bricolage width axis — slightly condensed */
+  --wg-display: 600;
+
+  /* ---- SPACING — 4/8 scale --------------------------------------------- */
+  --s-1: 0.25rem;
+  --s-2: 0.5rem;
+  --s-3: 0.75rem;
+  --s-4: 1rem;
+  --s-6: 1.5rem;
+  --s-8: 2rem;
+  --s-12: 3rem;
+  --s-16: 4rem;
+  --s-24: 6rem;
+  --s-32: 8rem;
+
+  /* ---- LAYOUT ----------------------------------------------------------
+     Asymmetric: a main column plus a persistent metadata rail. The rail
+     carries real data (status, year, proof count), never decoration.     */
+  --measure: 1100px;
+  --rail: 13.5rem;
+  --gutter: clamp(1.25rem, 5vw, 2.5rem);
+
+  /* ---- MOTION ----------------------------------------------------------
+     Reveals are opacity + 8px only. One signature moment (hero canvas).  */
+  --dur-fast: 120ms;
+  --dur: 220ms;
+  --dur-slow: 420ms;
+  --ease: cubic-bezier(0.2, 0, 0, 1);
+  --reveal-y: 8px;
+
+  /* ---- RADII & RULES ---------------------------------------------------- */
+  --r-sm: 3px;
+  --r-md: 6px;
+  --rule-w: 1px;
+}
+
+/* --------------------------------------------------------------------------
+   COLOR — dark is the default. Light is designed, not inverted:
+   the ground goes warm paper, the accent darkens to hold contrast on it,
+   and the rules get heavier because hairlines vanish on white.
+   -------------------------------------------------------------------------- */
+:root,
+:root[data-theme="dark"] {
+  color-scheme: dark;
+
+  --bg: #0b0d10; /* near-black, cool cast — not #000 */
+  --bg-raised: #12151a;
+  --bg-sunken: #08090b;
+
+  --text: #e8e6e1; /* warm off-white against cool ground */
+  --text-dim: #9a9ca0;
+  --text-faint: #686b70;
+
+  --rule: rgb(232 230 225 / 10%);
+  --rule-strong: rgb(232 230 225 / 20%);
+
+  --accent: #00c2a8; /* the only accent. interactive or verified. */
+  --accent-hover: #2ad9c0;
+  --accent-ink: #00312b; /* text placed on accent */
+  --accent-wash: rgb(0 194 168 / 12%);
+
+  --focus: #00c2a8;
+}
+
+:root[data-theme="light"] {
+  color-scheme: light;
+
+  --bg: #f2f1ed; /* warm paper — carries the warmth the dark text had */
+  --bg-raised: #ffffff;
+  --bg-sunken: #e7e5df;
+
+  --text: #16181b;
+  --text-dim: #55585d;
+  --text-faint: #7c8085;
+
+  --rule: rgb(22 24 27 / 14%); /* heavier: hairlines disappear on paper */
+  --rule-strong: rgb(22 24 27 / 28%);
+
+  --accent: #007566; /* darkened jade — 5.0:1 on paper */
+  --accent-hover: #00594d;
+  --accent-ink: #ffffff;
+  --accent-wash: rgb(0 117 102 / 10%);
+
+  --focus: #007566;
+}
+
+@media (prefers-color-scheme: light) {
+  :root:not([data-theme]) {
+    color-scheme: light;
+    --bg: #f2f1ed;
+    --bg-raised: #ffffff;
+    --bg-sunken: #e7e5df;
+    --text: #16181b;
+    --text-dim: #55585d;
+    --text-faint: #7c8085;
+    --rule: rgb(22 24 27 / 14%);
+    --rule-strong: rgb(22 24 27 / 28%);
+    --accent: #007566;
+    --accent-hover: #00594d;
+    --accent-ink: #ffffff;
+    --accent-wash: rgb(0 117 102 / 10%);
+    --focus: #007566;
+  }
+}
+
+/* --------------------------------------------------------------------------
+   THE TWO REGISTERS — the signature device.
+
+   .is-proven  a claim with a linked project behind it. Set solid, in full
+               text color, and it is a real link to that proof.
+   .is-stated  a target, an estimate, or working knowledge. Dimmed, dotted
+               underline, carries a dagger, and is deliberately NOT a link
+               because there is nothing to link to.
+
+   Every metric, skill, and status on the site resolves to one of these.
+   -------------------------------------------------------------------------- */
+.is-proven {
+  color: var(--text);
+  text-decoration: none;
+}
+.is-proven[href]:hover,
+.is-proven[href]:focus-visible {
+  color: var(--accent);
+}
+
+.is-stated {
+  color: var(--text-dim);
+  text-decoration: underline dotted var(--rule-strong);
+  text-underline-offset: 0.28em;
+  cursor: help;
+}
+.is-stated::after {
+  content: "†";
+  font-family: var(--font-mono);
+  font-size: 0.7em;
+  vertical-align: super;
+  margin-inline-start: 0.15em;
+  color: var(--text-faint);
+}
+
+/* --------------------------------------------------------------------------
+   BASE
+   -------------------------------------------------------------------------- */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  -webkit-text-size-adjust: 100%;
+}
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--font-body);
+  font-size: var(--t-body);
+  line-height: var(--lh-body);
+  letter-spacing: var(--tr-body);
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+h1,
+h2,
+h3 {
+  font-family: var(--font-display);
+  font-variation-settings: "wdth" var(--wd-display);
+  font-weight: var(--wg-display);
+  letter-spacing: var(--tr-display);
+  line-height: var(--lh-display);
+  text-wrap: balance;
+}
+
+h1 { font-size: var(--t-d1); }
+h2 { font-size: var(--t-d2); }
+h3 {
+  font-size: var(--t-d3);
+  line-height: var(--lh-d3);
+  letter-spacing: var(--tr-d3);
+}
+
+p { text-wrap: pretty; }
+
+a {
+  color: var(--accent);
+  text-decoration-thickness: 1px;
+  text-underline-offset: 0.2em;
+}
+
+/* Real focus states. Never remove without replacing. */
+:focus-visible {
+  outline: 2px solid var(--focus);
+  outline-offset: 3px;
+  border-radius: var(--r-sm);
+}
+
+/* --------------------------------------------------------------------------
+   UTILITIES
+   -------------------------------------------------------------------------- */
+.meta {
+  font-family: var(--font-mono);
+  font-size: var(--t-meta);
+  letter-spacing: var(--tr-meta);
+  text-transform: uppercase;
+  color: var(--text-faint);
+  font-weight: 500;
+}
+
+.shell {
+  max-width: var(--measure);
+  margin-inline: auto;
+  padding-inline: var(--gutter);
+}
+
+/* The asymmetric grid: content column + metadata rail. */
+.split {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) var(--rail);
+  gap: var(--s-12);
+  align-items: start;
+}
+
+@media (max-width: 820px) {
+  .split {
+    grid-template-columns: minmax(0, 1fr);
+    gap: var(--s-6);
+  }
+}
+
+.skip-link {
+  position: absolute;
+  left: -9999px;
+  top: var(--s-2);
+  background: var(--accent);
+  color: var(--accent-ink);
+  padding: var(--s-2) var(--s-4);
+  border-radius: var(--r-sm);
+  font-family: var(--font-mono);
+  font-size: var(--t-meta);
+  z-index: 100;
+}
+.skip-link:focus {
+  left: var(--s-4);
+}
+
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+
+/* --------------------------------------------------------------------------
+   MOTION — every animation on the site derives from these two, and both
+   are switched off wholesale below.
+   -------------------------------------------------------------------------- */
+.reveal {
+  opacity: 0;
+  transform: translateY(var(--reveal-y));
+  transition: opacity var(--dur-slow) var(--ease), transform var(--dur-slow) var(--ease);
+}
+.reveal.is-in {
+  opacity: 1;
+  transform: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+  .reveal {
+    opacity: 1;
+    transform: none;
+  }
+}

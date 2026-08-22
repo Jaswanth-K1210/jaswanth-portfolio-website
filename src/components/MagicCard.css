@@ -1,0 +1,32 @@
+.magic-card {
+  position: relative;
+  border-radius: 18px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  background: var(--plate);
+  overflow: hidden;
+  isolation: isolate;
+}
+
+.magic-card__glow {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  background: radial-gradient(
+    340px circle at var(--mx, 50%) var(--my, 0%),
+    var(--signal-wash),
+    transparent 65%
+  );
+  transition: opacity 0.3s ease;
+}
+
+.magic-card__body {
+  position: relative;
+  z-index: 1;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .magic-card__glow {
+    background: radial-gradient(340px circle at 50% 0%, var(--signal-wash), transparent 65%);
+  }
+}

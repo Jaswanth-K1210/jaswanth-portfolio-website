@@ -1,7 +1,7 @@
 .skills-block-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-  gap: 2rem;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 280px), 1fr));
+  gap: 1.25rem;
   max-width: 1100px;
   margin: 0 auto;
 }
@@ -9,22 +9,29 @@
 .skill-box {
   display: flex;
   flex-direction: column;
-  padding: 2rem;
+  padding: clamp(1.25rem, 2.5vw, 2rem);
 }
 
 .skill-box-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 2rem;
+  margin-bottom: 1.5rem;
 }
 
 .skill-box-header h3 {
-  font-size: 1.15rem;
+  font-size: clamp(0.95rem, 1.3vw, 1.15rem);
 }
 
 .skill-pills {
   display: flex;
   flex-wrap: wrap;
-  gap: 12px;
+  gap: 8px;
+}
+
+@media (max-width: 640px) {
+  .skills-block-grid {
+    grid-template-columns: 1fr;
+    gap: 1rem;
+  }
 }

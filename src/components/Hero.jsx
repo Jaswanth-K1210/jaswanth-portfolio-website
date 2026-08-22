@@ -1,127 +1,166 @@
 import React from 'react';
 
-import { Github, FileText, Bot, Linkedin, Code, Mail, Activity } from 'lucide-react';
+import { Github, Linkedin, Code, Boxes, ArrowRight, Mail, Activity, Coins } from 'lucide-react';
 import './Hero.css';
+import { profile, links, orbit, assets, getProject } from '../data';
+import { usePrefersReducedMotion } from '../lib/useAsset';
+
+const socialLinks = [
+  { href: links.github, label: 'GitHub', Icon: Github },
+  { href: links.linkedin, label: 'LinkedIn', Icon: Linkedin },
+  { href: links.leetcode, label: 'LeetCode', Icon: Code },
+  { href: links.huggingface, label: 'HuggingFace', Icon: Boxes },
+].filter((l) => l.href);
+
+/* Icons are presentation, so the mapping lives here and data.js only names
+   one — same contract Skills.jsx uses for its group icons. */
+const ORBIT_ICON = {
+  linkedin: Linkedin,
+  github: Github,
+  code: Code,
+  boxes: Boxes,
+  mail: Mail,
+  activity: Activity,
+  coins: Coins,
+};
+
+/* A node is either a profile off `links` or a project's live deployment.
+   Anything that cannot be resolved to a real URL is dropped rather than
+   rendered as a dead orbiting dot. */
+function resolveNode(node) {
+  const Icon = ORBIT_ICON[node.icon] || Boxes;
+
+  if (node.project) {
+    const project = getProject(node.project);
+    const live = project?.links.find((l) => l.kind === 'live' && l.href);
+    if (!live) return null;
+    return { href: live.href, label: `${project.title} — live`, Icon };
+  }
+
+  const href = links[node.link];
+  if (!href) return null;
+  return { href, label: `${node.label} profile`, Icon };
+}
+
+const innerNodes = orbit.inner.map(resolveNode).filter(Boolean);
+const outerNodes = orbit.outer.map(resolveNode).filter(Boolean);
+
+const ORBIT_PERIOD = 26;
+const delayFor = (i, total) => `${-(ORBIT_PERIOD / total) * i}s`;
+
+/* One pill, used by every action in the hero. */
+function PillButton(props) {
+  const { Icon } = props;
+  return (
+    <a
+      className="cta-button"
+      href={props.href}
+      {...(props.external ? { target: '_blank', rel: 'noreferrer' } : {})}
+    >
+      <span className="cta-button__fill" aria-hidden="true" />
+      <span className="cta-button__label">{props.label}</span>
+      <span className="cta-button__icon" aria-hidden="true"><Icon size={15} /></span>
+    </a>
+  );
+}
+
+/* Splits the headline into spans so each word can cascade in on mount. */
+function WordReveal({ text, className, delayStep = 0.05, disabled }) {
+  return (
+    <h1 className={className}>
+      {text.split(' ').map((word, i) => (
+        <React.Fragment key={`${word}-${i}`}>
+          {/* The space lives OUTSIDE the span: a trailing space inside an
+              inline-block is collapsed away, which welds the words together. */}
+          <span
+            className={disabled ? undefined : 'word-reveal'}
+            style={disabled ? undefined : { animationDelay: `${i * delayStep}s` }}
+          >
+            {word}
+          </span>
+          {' '}
+        </React.Fragment>
+      ))}
+    </h1>
+  );
+}
+
+function Ring({ nodes, ringClass, nodeClass }) {
+  return (
+    <div className={`orbit-ring ${ringClass}`}>
+      {nodes.map((node, i) => {
+        const delay = delayFor(i, nodes.length);
+        const { Icon } = node;
+        return (
+          <div className="electron-wrapper" key={node.label} style={{ animationDelay: delay }}>
+            <div className={`electron-node ${nodeClass}`} style={{ animationDelay: delay }}>
+              <a href={node.href} target="_blank" rel="noreferrer" className="satellite-content">
+                <Icon size={17} />
+                <span className="node-tooltip text-mono">{node.label}</span>
+              </a>
+            </div>
+          </div>
+        );
+      })}
+    </div>
+  );
+}
 
 export default function Hero() {
+  const reducedMotion = usePrefersReducedMotion();
+  const [first, ...rest] = profile.name.split(' ');
+
   return (
     <section className="hero-viewport" id="home">
 
-      {/* Navbar integrated into Hero Section to match static placement in design */}
-      <nav className="top-nav container">
-        <div className="nav-logo">Jaswanth Koppisetty</div>
-        <div className="nav-links text-mono text-muted">
-          <a href="#about">About</a>
-          <a href="#projects">Projects <span className="dot-decor"></span></a>
-          <a href="#research">Research</a>
-          <a href="#skills">Skills</a>
-        </div>
-        <a href="#contact" className="btn-contact btn-purple">Contact Me</a>
-      </nav>
-
-      {/* Hero Grid Structure */}
-      <div className="hero-grid container">
-
-        {/* Left Side: Glowing Title and Info */}
-        <div
-          className="hero-left"
-        >
-          <h1 className="hero-glow-title">
-            Hi,<br />
-            I'm Jaswanth <span style={{ display: 'inline-block' }} role="img" aria-label="wave">👋</span>
-          </h1>
-
-          <p className="hero-desc text-mono text-muted">
-            I build intelligent software systems that combine machine learning, distributed infrastructure, and real-time applications. My work focuses on designing autonomous AI systems, scalable data pipelines, and experimental architectures that operate under real-world conditions.
+      <div className="hero-stage">
+        <div className="hero-copy container">
+          {/* The wordmark is type only — the portrait lives in the nucleus. */}
+          <p className="hero-wordmark" aria-label={profile.name}>
+            <span className="hero-wordmark__solid">{first}</span>
+            {rest.length > 0 && (
+              <span className="hero-wordmark__outline">{rest.join(' ')}</span>
+            )}
           </p>
 
-          <div className="hero-links text-mono text-muted">
-            <a href="https://github.com/Jaswanth-K1210" target="_blank" rel="noreferrer" className="link-item">
-              <Github size={18} /> Github Profile
-            </a>
-            <a href="https://www.linkedin.com/in/jaswanth-koppisetty/" target="_blank" rel="noreferrer" className="link-item">
-              <Linkedin size={18} /> LinkedIn Profile
-            </a>
-            <a href="#research" className="link-item">
-              <FileText size={18} /> Read Research
-            </a>
+          <WordReveal text={profile.headline} className="hero-headline" disabled={reducedMotion} />
+
+          <p className="hero-sub">{profile.subheadline}</p>
+
+          <p className="hero-status text-mono">
+            <span className="hero-status-dot" aria-hidden="true" />
+            {profile.status}
+          </p>
+
+          <div className="hero-actions">
+            <PillButton href={profile.resumeUrl} label="View Résumé" Icon={ArrowRight} external />
+
+            {socialLinks.map((social) => (
+              <PillButton
+                key={social.label}
+                href={social.href}
+                label={social.label}
+                Icon={social.Icon}
+                external
+              />
+            ))}
           </div>
-        </div>
 
-        {/* Right Side: Circular Visualization and Cards */}
-        <div
-          className="hero-right"
-        >
-          <div className="profile-visual-wrapper">
-
+          {/* Nucleus + orbits */}
+          <div className="hero-orbit">
             <div className="atom-system">
-              {/* Nucleus */}
+              <div className="orbit-plate" aria-hidden="true" />
+
               <div className="center-nucleus">
-                <img src="/Profile.jpg" alt="Jaswanth Koppisetty" className="profile-img" style={{ objectPosition: ' center', transform: 'scale(1.9)', transformOrigin: ' center' }} />
+                <img src={assets.avatarFallback} alt={profile.name} className="profile-img" />
               </div>
 
-              {/* Ring 1: LinkedIn, GitHub & LeetCode */}
-              <div className="orbit-ring ring-1">
-                <div className="electron-wrapper" style={{ animationDelay: '0s' }}>
-                  <div className="electron-node node-1" style={{ animationDelay: '0s' }}>
-                    <a href="https://www.linkedin.com/in/jaswanth-koppisetty/" target="_blank" rel="noreferrer" className="satellite-content">
-                      <Linkedin size={20} color="#14f1d9" />
-                      <span className="node-tooltip">LinkedIn Profile</span>
-                    </a>
-                  </div>
-                </div>
-                <div className="electron-wrapper" style={{ animationDelay: '-6.6s' }}>
-                  <div className="electron-node node-1" style={{ animationDelay: '-6.6s' }}>
-                    <a href="https://github.com/Jaswanth-K1210" target="_blank" rel="noreferrer" className="satellite-content">
-                      <Github size={20} color="#14f1d9" />
-                      <span className="node-tooltip">GitHub Profile</span>
-                    </a>
-                  </div>
-                </div>
-                <div className="electron-wrapper" style={{ animationDelay: '-13.3s' }}>
-                  <div className="electron-node node-1" style={{ animationDelay: '-13.3s' }}>
-                    <a href="https://leetcode.com/u/a5S3b6vtks/" target="_blank" rel="noreferrer" className="satellite-content">
-                      <Code size={20} color="#14f1d9" />
-                      <span className="node-tooltip">LeetCode Profile</span>
-                    </a>
-                  </div>
-                </div>
-              </div>
-
-              {/* Ring 2: Nexus Mail & Market Pulse */}
-              <div className="orbit-ring ring-2">
-                <div className="electron-wrapper" style={{ animationDelay: '-4s' }}>
-                  <div className="electron-node node-2" style={{ animationDelay: '-4s' }}>
-                    <a href="https://nexus-mail.me" target="_blank" rel="noreferrer" className="satellite-content">
-                      <Mail size={20} color="#14f1d9" />
-                      <span className="node-tooltip">Nexus Mail Live</span>
-                    </a>
-                  </div>
-                </div>
-                <div className="electron-wrapper" style={{ animationDelay: '-14s' }}>
-                  <div className="electron-node node-2" style={{ animationDelay: '-14s' }}>
-                    <a href="https://market-pulse-jet.vercel.app" target="_blank" rel="noreferrer" className="satellite-content">
-                      <Activity size={20} color="#14f1d9" />
-                      <span className="node-tooltip">Market Pulse Live</span>
-                    </a>
-                  </div>
-                </div>
-              </div>
+              <Ring nodes={innerNodes} ringClass="ring-1" nodeClass="node-1" />
+              <Ring nodes={outerNodes} ringClass="ring-2" nodeClass="node-2" />
             </div>
-
           </div>
         </div>
-
       </div>
-
-      {/* Decorative Blur Blobs mirroring layout */}
-      <div className="blur-blob blob-purple shape-1"></div>
-      <div className="blur-blob blob-purple shape-2"></div>
-
-      {/* Bottom Right Floating Chat Action Button */}
-      <a href="#contact" className="floating-chat-btn">
-        <Bot size={20} />
-      </a>
     </section>
   );
 }
